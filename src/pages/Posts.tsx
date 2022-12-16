@@ -10,9 +10,7 @@ import nopostsImage from "../assets/noposts.png";
 const Posts = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const { posts, status, error } = useSelector(
-    (state: RootState) => state.post
-  );
+  const { posts, status } = useSelector((state: RootState) => state.post);
 
   useEffect(() => {
     if (id) {
@@ -28,7 +26,7 @@ const Posts = () => {
 
   return (
     <>
-      {posts.length > 0 && <PostsOptions />}
+      <PostsOptions />
       {posts.length === 0 && status !== "pending" ? (
         <Flex direction="column" justify="center" align="center">
           <div style={{ width: 400, marginLeft: "auto", marginRight: "auto" }}>

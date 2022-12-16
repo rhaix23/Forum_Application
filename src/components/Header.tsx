@@ -57,14 +57,17 @@ const HeaderComponent = () => {
   const [opened, setOpened] = useState(false);
 
   const renderLinks = links.map((link, index) => {
-    if (link.text === "Profile" && !user) return null;
+    if (link.text === "Profile" && !user) {
+      return null;
+    }
+
     return (
       <Button
         key={index}
         size="xs"
         variant={location.pathname === `${link.link}` ? "outline" : "subtle"}
         component={Link}
-        to={link.link}
+        to={link.text === "Profile" ? `${link.link}/${user?._id}` : link.link}
       >
         {link.text}
       </Button>
@@ -113,7 +116,7 @@ const HeaderComponent = () => {
             <Menu.Item
               icon={<IconUser size={14} />}
               component={Link}
-              to="/profile"
+              to={`/profile/${user._id}`}
             >
               Profile
             </Menu.Item>

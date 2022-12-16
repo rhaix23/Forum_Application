@@ -28,7 +28,7 @@ const SinglePost = () => {
         size="xs"
         mb={64}
         leftIcon={<IconChevronLeft size={14} />}
-        onClick={() => navigate(`/${post?.subcategory}`)}
+        onClick={() => navigate(-1)}
       >
         Back
       </Button>

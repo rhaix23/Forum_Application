@@ -11,6 +11,8 @@ import { PostComments } from "./PostComments";
 import { CreateComment } from "./createComment";
 import { SingleComment } from "./SingleComment";
 import { Footer } from "./Footer";
+import { ProfileMenuPosts } from "./ProfileMenuPosts";
+import { ProfileMenuComments } from "./ProfileMenuComments";
 
 export {
   ThemeColorToggle,
@@ -26,4 +28,6 @@ export {
   CreateComment,
   SingleComment,
   Footer,
+  ProfileMenuPosts,
+  ProfileMenuComments,
 };

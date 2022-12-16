@@ -41,8 +41,6 @@ const PreviewPostCard = ({ post }: IProps) => {
     }
   }, [post, user]);
 
-  console.log(userLiked, userDisliked);
-
   const handleRate = (value: -1 | 1) => {
     if (!user) {
       toast.error("You must be logged in to rate posts");

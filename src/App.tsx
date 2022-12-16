@@ -52,7 +52,7 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/:id" element={<Posts />} />
               <Route path="/post/:id" element={<SinglePost />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/:id" element={<Profile />} />
             </Route>
           </Routes>
         </BrowserRouter>

@@ -7,12 +7,14 @@ import {
   editPost,
   getSinglePost,
   getSubcategoryPosts,
+  getUserPosts,
   ratePost,
 } from "./postThunks";
 import { toast } from "react-toastify";
 
 interface IPostSliceState {
   posts: IPost[];
+  userPosts: IPost[];
   post: IPost | null;
   error: string;
   status: Status;
@@ -20,6 +22,7 @@ interface IPostSliceState {
 
 const initialState: IPostSliceState = {
   posts: [],
+  userPosts: [],
   post: null,
   error: "",
   status: "idle",
@@ -47,6 +50,12 @@ const postSlice = createSlice({
       state.post = action.payload.post;
       state.status = "resolved";
       state.posts = state.posts.map((post) => {
+        if (post._id === action.payload.post._id) {
+          return action.payload.post;
+        }
+        return post;
+      });
+      state.userPosts = state.userPosts.map((post) => {
         if (post._id === action.payload.post._id) {
           return action.payload.post;
         }
@@ -97,6 +106,18 @@ const postSlice = createSlice({
       state.status = "resolved";
     });
     builder.addCase(ratePost.rejected, (state, action) => {
+      state.status = "rejected";
+      action.payload && (state.error = action.payload);
+      toast.error(action.payload);
+    });
+    builder.addCase(getUserPosts.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(getUserPosts.fulfilled, (state, action) => {
+      state.userPosts = action.payload.posts;
+      state.status = "resolved";
+    });
+    builder.addCase(getUserPosts.rejected, (state, action) => {
       state.status = "rejected";
       action.payload && (state.error = action.payload);
     });
