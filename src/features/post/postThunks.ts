@@ -151,3 +151,19 @@ export const deletePostRate = createAsyncThunk<
     return thunkAPI.rejectWithValue("Something went wrong");
   }
 });
+
+export const getUserPosts = createAsyncThunk<
+  { posts: IPost[] },
+  { userId: string },
+  { rejectValue: string }
+>("post/getUserPosts", async ({ userId }, thunkAPI) => {
+  try {
+    const response = await api.get(`/post/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+    return thunkAPI.rejectWithValue("Something went wrong");
+  }
+});

@@ -10,9 +10,16 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import { IconBrandGithub, IconBrandLinkedin, IconMail } from "@tabler/icons";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { PreviewPostCard, ProfileMenuAccount } from "../components";
+import {
+  PreviewPostCard,
+  ProfileMenuAccount,
+  ProfileMenuComments,
+  ProfileMenuPosts,
+} from "../components";
+import { Loader } from "../components/Loader";
 import { RootState } from "../store";
 
 const useStyles = createStyles((theme) => ({
@@ -31,14 +38,15 @@ const useStyles = createStyles((theme) => ({
 const Profile = () => {
   const { classes } = useStyles();
   const { user, status } = useSelector((state: RootState) => state.user);
+  const [activeTab, setActiveTab] = useState<string | null>("profile");
 
   if (status === "pending") {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
     <Paper shadow="xs" p={16} withBorder>
-      <Tabs defaultValue="profile">
+      <Tabs keepMounted={false} value={activeTab} onTabChange={setActiveTab}>
         <Tabs.List>
           <Tabs.Tab value="profile">Profile</Tabs.Tab>
           <Tabs.Tab value="posts">Posts</Tabs.Tab>
@@ -113,19 +121,11 @@ const Profile = () => {
         </Tabs.Panel>
 
         <Tabs.Panel value="posts" pt="xs">
-          <Box>
-            <Text weight={500} size={20} mb={16}>
-              My Posts
-            </Text>
-          </Box>
+          <ProfileMenuPosts />
         </Tabs.Panel>
 
         <Tabs.Panel value="comments" pt="xs">
-          <Box>
-            <Text weight={500} size={20} mb={16}>
-              My Comments
-            </Text>
-          </Box>
+          <ProfileMenuComments />
         </Tabs.Panel>
 
         <Tabs.Panel value="account" pt="xs">
