@@ -12,12 +12,13 @@ import {
 import {
   IconAlertCircle,
   IconDots,
+  IconEye,
   IconPencil,
   IconTrash,
 } from "@tabler/icons";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   deleteComment,
   updateComment,
@@ -33,6 +34,8 @@ interface IProps {
 
 export const SingleComment = ({ comment }: IProps) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const [body, setBody] = useState(comment.body || "");
   const [isEditing, setIsEditing] = useState(false);
@@ -40,16 +43,26 @@ export const SingleComment = ({ comment }: IProps) => {
   const { user } = useSelector((state: RootState) => state.user);
   const { status } = useSelector((state: RootState) => state.comment);
 
+  console.log(comment);
+
   const handleDelete = () => {
     if (id) {
-      dispatch(deleteComment({ commentId: comment._id, postId: id }));
+      dispatch(
+        deleteComment({ commentId: comment._id, postId: comment.post._id })
+      );
       setIsDeleting(false);
     }
   };
 
   const handleEdit = () => {
     if (id) {
-      dispatch(updateComment({ commentId: comment._id, postId: id, body }));
+      dispatch(
+        updateComment({
+          commentId: comment._id,
+          postId: comment.post._id,
+          body,
+        })
+      );
       setIsEditing(false);
     }
   };
@@ -69,34 +82,49 @@ export const SingleComment = ({ comment }: IProps) => {
     >
       <Flex justify="space-between" align="center">
         <Text size={12} color="gray.6">
-          {comment.user.username} <>&#183;</> 8 hours ago
+          {comment.user.username} <>&#183;</> 8 hours ago commented on{" "}
+          <Text
+            size={12}
+            component={Link}
+            color="blue.6"
+            to={`/post/${comment.post._id}`}
+            sx={{
+              fontStyle: "italic",
+              ":hover": {
+                textDecoration: "underline",
+              },
+            }}
+          >
+            {comment.post.title}
+          </Text>
         </Text>
-        {comment.user._id === user?._id && (
-          <Menu shadow="md">
-            <Menu.Target>
-              <ActionIcon>
-                <IconDots size={18} />
-              </ActionIcon>
-            </Menu.Target>
+        {comment.user._id === user?._id &&
+          location.pathname.includes("post") && (
+            <Menu shadow="md">
+              <Menu.Target>
+                <ActionIcon>
+                  <IconDots size={18} />
+                </ActionIcon>
+              </Menu.Target>
 
-            <Menu.Dropdown>
-              <Menu.Item
-                color="yellow"
-                icon={<IconPencil size={18} />}
-                onClick={() => setIsEditing(true)}
-              >
-                Edit
-              </Menu.Item>
-              <Menu.Item
-                color="red"
-                icon={<IconTrash size={18} />}
-                onClick={() => setIsDeleting(true)}
-              >
-                Delete
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        )}
+              <Menu.Dropdown>
+                <Menu.Item
+                  color="yellow"
+                  icon={<IconPencil size={18} />}
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit
+                </Menu.Item>
+                <Menu.Item
+                  color="red"
+                  icon={<IconTrash size={18} />}
+                  onClick={() => setIsDeleting(true)}
+                >
+                  Delete
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          )}
       </Flex>
 
       {isEditing ? (

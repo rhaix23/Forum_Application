@@ -7,17 +7,20 @@ import {
   createComment,
   deleteComment,
   getPostComments,
+  getUserComments,
   updateComment,
 } from "./commentThunks";
 import { toast } from "react-toastify";
 
 interface ICommentSliceState {
   comments: IComment[];
+  userComments: IComment[];
   status: Status;
 }
 
 const initialState: ICommentSliceState = {
   comments: [],
+  userComments: [],
   status: "idle",
 };
 
@@ -67,6 +70,17 @@ const commentSlice = createSlice({
       toast.success("Comment has been updated");
     });
     builder.addCase(updateComment.rejected, (state, action) => {
+      state.status = "rejected";
+      toast.error(action.payload);
+    });
+    builder.addCase(getUserComments.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(getUserComments.fulfilled, (state, action) => {
+      state.status = "resolved";
+      state.userComments = action.payload.comments;
+    });
+    builder.addCase(getUserComments.rejected, (state, action) => {
       state.status = "rejected";
       toast.error(action.payload);
     });

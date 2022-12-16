@@ -73,3 +73,19 @@ export const deleteComment = createAsyncThunk<
     return thunkAPI.rejectWithValue("Something went wrong");
   }
 });
+
+export const getUserComments = createAsyncThunk<
+  { comments: IComment[] },
+  { userId: string },
+  { rejectValue: string }
+>("comment/getUserComments", async ({ userId }, thunkAPI) => {
+  try {
+    const response = await api.get(`/comment/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+    return thunkAPI.rejectWithValue("Something went wrong");
+  }
+});
