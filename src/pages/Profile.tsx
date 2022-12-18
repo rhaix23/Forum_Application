@@ -1,26 +1,16 @@
-import {
-  Anchor,
-  Box,
-  createStyles,
-  Flex,
-  Paper,
-  SimpleGrid,
-  Tabs,
-  Text,
-  ThemeIcon,
-} from "@mantine/core";
-import { IconBrandGithub, IconBrandLinkedin, IconMail } from "@tabler/icons";
-import { useState } from "react";
+import { createStyles, Paper, Tabs } from "@mantine/core";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
-  PreviewPostCard,
   ProfileMenuAccount,
   ProfileMenuComments,
   ProfileMenuPosts,
+  ProfileMenuUserAccount,
 } from "../components";
 import { Loader } from "../components/Loader";
-import { RootState } from "../store";
+import { getSingleUser } from "../features/user/userThunks";
+import { RootState, useAppDispatch } from "../store";
 
 const useStyles = createStyles((theme) => ({
   linkPaper: {
@@ -28,6 +18,13 @@ const useStyles = createStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+  },
+  linkPaperDisabled: {
+    backgroundColor: theme.colors.gray[1],
+    cursor: "not-allowed",
+  },
+  linkPaperActive: {
+    cursor: "pointer",
     transition: "background-color 0.2s ease-in-out",
     "&:hover": {
       backgroundColor: theme.colors.blue[9],
@@ -36,88 +33,42 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const Profile = () => {
-  const { classes } = useStyles();
-  const { user, status } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
+  const { classes, cx } = useStyles();
+  const { id } = useParams();
+  const { user, profile, status } = useSelector(
+    (state: RootState) => state.user
+  );
   const [activeTab, setActiveTab] = useState<string | null>("profile");
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getSingleUser({ userId: id }));
+    }
+  }, [id]);
 
   if (status === "pending") {
     return <Loader />;
+  }
+
+  if (!profile) {
+    return null;
   }
 
   return (
     <Paper shadow="xs" p={16} withBorder>
       <Tabs keepMounted={false} value={activeTab} onTabChange={setActiveTab}>
         <Tabs.List>
-          <Tabs.Tab value="profile">Profile</Tabs.Tab>
+          <Tabs.Tab value="profile">User Profile</Tabs.Tab>
           <Tabs.Tab value="posts">Posts</Tabs.Tab>
           <Tabs.Tab value="comments">Comments</Tabs.Tab>
-          <Tabs.Tab value="account">Account</Tabs.Tab>
+          {user && user._id === profile._id && (
+            <Tabs.Tab value="account">Account</Tabs.Tab>
+          )}
         </Tabs.List>
 
         <Tabs.Panel value="profile" pt="xs">
-          <Box>
-            <Box mb={32}>
-              <Text align="center" weight={500} size={20}>
-                {user && user.username}
-              </Text>
-              <Text align="center" size={12}>
-                Software Engineer at Google
-              </Text>
-            </Box>
-            <Box mb={32}>
-              <Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
-                omnis facilis corrupti modi alias nostrum quisquam consequuntur
-                sed, aperiam, minima dignissimos blanditiis eaque distinctio!
-                Nostrum doloribus facilis neque libero illo.
-              </Text>
-            </Box>
-            <Box>
-              <SimpleGrid cols={3} spacing={16}>
-                <Anchor href="mailto:patrick@gmail.com">
-                  <Paper
-                    shadow="xs"
-                    p={16}
-                    withBorder
-                    className={classes.linkPaper}
-                  >
-                    <ThemeIcon variant="light" mb={8}>
-                      <IconMail />
-                    </ThemeIcon>
-                    <Text>Send me an email</Text>
-                  </Paper>
-                </Anchor>
-
-                <Anchor href="https://github.com" target="_blank">
-                  <Paper
-                    shadow="xs"
-                    p={16}
-                    withBorder
-                    className={classes.linkPaper}
-                  >
-                    <ThemeIcon variant="light" mb={8}>
-                      <IconBrandGithub />
-                    </ThemeIcon>
-                    <Text>Check out my projects</Text>
-                  </Paper>
-                </Anchor>
-
-                <Anchor href="https://ph.linkedin.com/" target="_blank">
-                  <Paper
-                    shadow="xs"
-                    p={16}
-                    withBorder
-                    className={classes.linkPaper}
-                  >
-                    <ThemeIcon variant="light" mb={8}>
-                      <IconBrandLinkedin />
-                    </ThemeIcon>
-                    <Text>Connect with me on LinkedIn</Text>
-                  </Paper>
-                </Anchor>
-              </SimpleGrid>
-            </Box>
-          </Box>
+          <ProfileMenuUserAccount />
         </Tabs.Panel>
 
         <Tabs.Panel value="posts" pt="xs">

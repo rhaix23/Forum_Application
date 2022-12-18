@@ -4,12 +4,13 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getUserPosts } from "../features/post/postThunks";
 import { RootState, useAppDispatch } from "../store";
+import { Loader } from "./Loader";
 import { PreviewPostCard } from "./PreviewPostCard";
 
 export const ProfileMenuPosts = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams();
-  const { userPosts } = useSelector((state: RootState) => state.post);
+  const { userPosts, status } = useSelector((state: RootState) => state.post);
 
   useEffect(() => {
     if (id) {
