@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { EditableUser, IUser } from "../../types/user.types";
 import { api } from "../../utils/axios";
 
-// @desc Get single user
+// @desc    Get single user
 export const getSingleUser = createAsyncThunk<
   { user: IUser },
   { userId: string },
@@ -94,6 +94,7 @@ export const changePassword = createAsyncThunk<
   }
 });
 
+// @desc    Update user
 export const updateUser = createAsyncThunk<
   { user: IUser },
   { userId: string; userInfo: EditableUser },

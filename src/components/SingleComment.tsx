@@ -12,13 +12,12 @@ import {
 import {
   IconAlertCircle,
   IconDots,
-  IconEye,
   IconPencil,
   IconTrash,
 } from "@tabler/icons";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   deleteComment,
   updateComment,
@@ -30,6 +29,7 @@ import { RichTextEditor } from "./RichTextEditor";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
+
 interface IProps {
   comment: IComment;
 }
@@ -86,20 +86,23 @@ export const SingleComment = ({ comment }: IProps) => {
           {comment.createdAt !== comment.updatedAt &&
             `(edited ${dayjs(comment.updatedAt).fromNow()})`}
           {location.pathname.includes("/profile") && (
-            <Text
-              size={12}
-              component={Link}
-              color="blue.6"
-              to={`/post/${comment.post._id}`}
-              sx={{
-                fontStyle: "italic",
-                ":hover": {
-                  textDecoration: "underline",
-                },
-              }}
-            >
-              commented on {comment.post.title}
-            </Text>
+            <>
+              <span> commented on </span>
+              <Text
+                size={12}
+                component={Link}
+                color="blue.6"
+                to={`/post/${comment.post._id}`}
+                sx={{
+                  fontStyle: "italic",
+                  ":hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                {comment.post.title}
+              </Text>
+            </>
           )}
         </Text>
         {comment.user._id === user?._id &&
@@ -139,7 +142,7 @@ export const SingleComment = ({ comment }: IProps) => {
             status={status}
             limit={1000}
           />
-          <Group position="right" mt={16}>
+          <Group position="right" my={16}>
             <Button
               variant="subtle"
               size="xs"
@@ -172,7 +175,7 @@ export const SingleComment = ({ comment }: IProps) => {
           >
             This action cannot be undone. Do you want to delete this comment?
           </Alert>
-          <Group position="right" mt={16}>
+          <Group position="right" my={16}>
             <Button
               variant="subtle"
               size="xs"

@@ -74,6 +74,7 @@ export const deleteComment = createAsyncThunk<
   }
 });
 
+// @desc    Get all comments for a user
 export const getUserComments = createAsyncThunk<
   { comments: IComment[] },
   { userId: string },

@@ -152,6 +152,7 @@ export const deletePostRate = createAsyncThunk<
   }
 });
 
+// @desc    Get all user posts
 export const getUserPosts = createAsyncThunk<
   { posts: IPost[] },
   { userId: string },

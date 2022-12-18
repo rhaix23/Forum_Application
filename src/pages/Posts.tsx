@@ -20,9 +20,7 @@ const Posts = () => {
 
   const renderPosts =
     posts &&
-    posts.map((post) =>
-      posts ? <PreviewPostCard key={post._id} post={post} /> : null
-    );
+    posts.map((post) => <PreviewPostCard key={post._id} post={post} />);
 
   return (
     <>

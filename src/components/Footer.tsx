@@ -1,18 +1,5 @@
-import {
-  createStyles,
-  Container,
-  Group,
-  ActionIcon,
-  Text,
-  Box,
-  Button,
-} from "@mantine/core";
-import {
-  IconBrandTwitter,
-  IconBrandYoutube,
-  IconBrandInstagram,
-  IconBrandGithub,
-} from "@tabler/icons";
+import { createStyles, Container, Group, Text, Button } from "@mantine/core";
+import { IconBrandGithub } from "@tabler/icons";
 import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -67,6 +54,9 @@ export const Footer = () => {
             size="md"
             variant="subtle"
             compact
+            component="a"
+            href="https://github.com/rhaix23/Forum_Application"
+            target="_blank"
           >
             Github
           </Button>

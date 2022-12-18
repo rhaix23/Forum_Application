@@ -22,7 +22,7 @@ const SinglePost = () => {
   }, []);
 
   return (
-    <>
+    <section>
       <Button
         color="gray"
         size="xs"
@@ -46,7 +46,7 @@ const SinglePost = () => {
       <CreateComment />
 
       <PostComments />
-    </>
+    </section>
   );
 };
 
