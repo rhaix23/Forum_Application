@@ -11,6 +11,8 @@ export interface IPost {
   comments: IComment[];
   likes: IRating[];
   dislikes: IRating[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface INewPost {

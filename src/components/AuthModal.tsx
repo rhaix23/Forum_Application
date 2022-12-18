@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { Dispatch, FormEvent, useState } from "react";
-import { login } from "../features/user/userThunks";
+import { login, register } from "../features/user/userThunks";
 import { useAppDispatch } from "../store";
 
 interface IProps {
@@ -33,14 +33,16 @@ const AuthModal = ({ opened, setOpened }: IProps) => {
     e.preventDefault();
 
     if (isNewUser) {
-      // dispatch(register(userInfo));
+      dispatch(register(userInfo));
     } else {
       dispatch(
         login({ username: userInfo.username, password: userInfo.password })
       );
     }
 
+    setUserInfo({ username: "", password: "", confirmPassword: "" });
     setOpened(false);
+    setIsNewUser(false);
   };
 
   return (
@@ -82,11 +84,11 @@ const AuthModal = ({ opened, setOpened }: IProps) => {
             />
           )}
         </Box>
-        <Button type="submit" size="xs" fullWidth mb={16}>
+        <Button type="submit" size="xs" fullWidth mb={32}>
           {isNewUser ? "Sign Up" : "Sign In"}
         </Button>
         <Flex justify="center" align="center" direction="column">
-          <Text mb={8}>
+          <Text mb={8} size={12}>
             {isNewUser ? "Already have an account?" : "Don't have an account?"}
           </Text>
           <Button

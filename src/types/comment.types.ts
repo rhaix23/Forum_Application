@@ -6,4 +6,6 @@ export interface IComment {
   body: string;
   post: IPost;
   user: IUser;
+  createdAt: string;
+  updatedAt: string;
 }

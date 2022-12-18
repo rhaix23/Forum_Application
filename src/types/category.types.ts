@@ -4,6 +4,8 @@ export interface ICategory {
   _id: string;
   name: string;
   subcategories: ISubcategory[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ISubcategory {
@@ -13,7 +15,3 @@ export interface ISubcategory {
   category: ICategory;
   posts: IPost[];
 }
-
-// Async thunk response
-
-// Async thunk parameters
