@@ -8,7 +8,7 @@ import { api } from "../../utils/axios";
 export const fetchCategories = createAsyncThunk<
   { categories: ICategory[] },
   void,
-  { rejectValue: KnownError }
+  { rejectValue: string }
 >("category/fetchCategories", async (_, thunkAPI) => {
   try {
     const response = await api.get("/category");

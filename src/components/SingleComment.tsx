@@ -27,14 +27,15 @@ import { RootState, useAppDispatch } from "../store";
 import { IComment } from "../types/comment.types";
 import { RichTextContent } from "./RichTextContent";
 import { RichTextEditor } from "./RichTextEditor";
-
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 interface IProps {
   comment: IComment;
 }
 
 export const SingleComment = ({ comment }: IProps) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const [body, setBody] = useState(comment.body || "");
@@ -42,8 +43,6 @@ export const SingleComment = ({ comment }: IProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
   const { status } = useSelector((state: RootState) => state.comment);
-
-  console.log(comment);
 
   const handleDelete = () => {
     if (id) {
@@ -82,21 +81,26 @@ export const SingleComment = ({ comment }: IProps) => {
     >
       <Flex justify="space-between" align="center">
         <Text size={12} color="gray.6">
-          {comment.user.username} <>&#183;</> 8 hours ago commented on{" "}
-          <Text
-            size={12}
-            component={Link}
-            color="blue.6"
-            to={`/post/${comment.post._id}`}
-            sx={{
-              fontStyle: "italic",
-              ":hover": {
-                textDecoration: "underline",
-              },
-            }}
-          >
-            {comment.post.title}
-          </Text>
+          {comment.user.username} <>&#183;</>{" "}
+          {dayjs(comment.createdAt).fromNow()}{" "}
+          {comment.createdAt !== comment.updatedAt &&
+            `(edited ${dayjs(comment.updatedAt).fromNow()})`}
+          {location.pathname.includes("/profile") && (
+            <Text
+              size={12}
+              component={Link}
+              color="blue.6"
+              to={`/post/${comment.post._id}`}
+              sx={{
+                fontStyle: "italic",
+                ":hover": {
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              commented on {comment.post.title}
+            </Text>
+          )}
         </Text>
         {comment.user._id === user?._id &&
           location.pathname.includes("post") && (
@@ -129,7 +133,12 @@ export const SingleComment = ({ comment }: IProps) => {
 
       {isEditing ? (
         <>
-          <RichTextEditor content={body} setContent={setBody} status={status} />
+          <RichTextEditor
+            content={body}
+            setContent={setBody}
+            status={status}
+            limit={1000}
+          />
           <Group position="right" mt={16}>
             <Button
               variant="subtle"
