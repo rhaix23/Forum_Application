@@ -13,6 +13,7 @@ import { SingleComment } from "./SingleComment";
 import { Footer } from "./Footer";
 import { ProfileMenuPosts } from "./ProfileMenuPosts";
 import { ProfileMenuComments } from "./ProfileMenuComments";
+import { ProfileMenuUserAccount } from "./ProfileMenuUserAccount";
 
 export {
   ThemeColorToggle,
@@ -30,4 +31,5 @@ export {
   Footer,
   ProfileMenuPosts,
   ProfileMenuComments,
+  ProfileMenuUserAccount,
 };
