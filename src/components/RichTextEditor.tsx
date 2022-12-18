@@ -6,16 +6,19 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Superscript from "@tiptap/extension-superscript";
 import SubScript from "@tiptap/extension-subscript";
+import CharacterCount from "@tiptap/extension-character-count";
 import { Dispatch } from "react";
 import { Status } from "../types/app.types";
+import { Text } from "@mantine/core";
 
 interface IProps {
   content: string;
   setContent: Dispatch<React.SetStateAction<string>>;
   status: Status;
+  limit?: number;
 }
 
-const RTE = ({ content, setContent, status }: IProps) => {
+const RTE = ({ content, setContent, status, limit = 1000 }: IProps) => {
   const editor = useEditor(
     {
       extensions: [
@@ -25,6 +28,7 @@ const RTE = ({ content, setContent, status }: IProps) => {
         Superscript,
         SubScript,
         Highlight,
+        CharacterCount.configure({ limit }),
         TextAlign.configure({ types: ["heading", "paragraph"] }),
       ],
       content,
@@ -34,6 +38,10 @@ const RTE = ({ content, setContent, status }: IProps) => {
     },
     [status]
   );
+
+  if (!editor) {
+    return null;
+  }
 
   return (
     <RichTextEditor editor={editor}>
@@ -78,6 +86,10 @@ const RTE = ({ content, setContent, status }: IProps) => {
       </RichTextEditor.Toolbar>
 
       <RichTextEditor.Content />
+
+      <Text color="gray" p={16}>
+        {editor.storage.characterCount.characters()}/{limit} characters
+      </Text>
     </RichTextEditor>
   );
 };
