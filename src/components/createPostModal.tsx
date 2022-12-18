@@ -58,6 +58,7 @@ const CreatePostModal = ({ opened, setOpened }: IProps) => {
             content={content}
             setContent={setContent}
             status={status}
+            limit={3000}
           />
         </Box>
         <Group position="right">

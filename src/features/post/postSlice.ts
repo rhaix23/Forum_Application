@@ -4,11 +4,13 @@ import { IPost } from "../../types/post.types";
 import {
   createPost,
   deletePost,
+  deletePostRate,
   editPost,
   getSinglePost,
   getSubcategoryPosts,
   getUserPosts,
   ratePost,
+  updatePostRate,
 } from "./postThunks";
 import { toast } from "react-toastify";
 
@@ -106,6 +108,28 @@ const postSlice = createSlice({
       state.status = "resolved";
     });
     builder.addCase(ratePost.rejected, (state, action) => {
+      state.status = "rejected";
+      action.payload && (state.error = action.payload);
+      toast.error(action.payload);
+    });
+    builder.addCase(updatePostRate.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(updatePostRate.fulfilled, (state) => {
+      state.status = "resolved";
+    });
+    builder.addCase(updatePostRate.rejected, (state, action) => {
+      state.status = "rejected";
+      action.payload && (state.error = action.payload);
+      toast.error(action.payload);
+    });
+    builder.addCase(deletePostRate.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(deletePostRate.fulfilled, (state) => {
+      state.status = "resolved";
+    });
+    builder.addCase(deletePostRate.rejected, (state, action) => {
       state.status = "rejected";
       action.payload && (state.error = action.payload);
       toast.error(action.payload);

@@ -8,7 +8,7 @@ import { api } from "../../utils/axios";
 export const getSubcategoryPosts = createAsyncThunk<
   { posts: IPost[] },
   { id: string },
-  { rejectValue: KnownError }
+  { rejectValue: string }
 >("post/getSubcategoryPosts", async ({ id }, thunkAPI) => {
   try {
     const response = await api.get(`/post/subcategory/${id}`);
@@ -25,7 +25,7 @@ export const getSubcategoryPosts = createAsyncThunk<
 export const getSinglePost = createAsyncThunk<
   { post: IPost },
   { id: string },
-  { rejectValue: KnownError }
+  { rejectValue: string }
 >("post/getSinglePost", async ({ id }, thunkAPI) => {
   try {
     const response = await api.get(`/post/${id}`);
@@ -139,7 +139,7 @@ export const deletePostRate = createAsyncThunk<
   void,
   { id: string; postId: string },
   { rejectValue: string }
->("post/updatePostRate", async ({ id, postId }, thunkAPI) => {
+>("post/deletePostRate", async ({ id, postId }, thunkAPI) => {
   try {
     const response = await api.delete(`/rating/${id}`);
     thunkAPI.dispatch(getSinglePost({ id: postId }));

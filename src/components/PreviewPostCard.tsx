@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Box,
+  createStyles,
   Divider,
   Flex,
   Group,
@@ -20,12 +21,25 @@ import {
   ratePost,
   updatePostRate,
 } from "../features/post/postThunks";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
+const useStyles = createStyles((theme) => ({
+  link: {
+    color: theme.colors.blue[7],
+    ":hover": {
+      textDecoration: "underline",
+    },
+  },
+}));
 
 interface IProps {
   post: IPost;
 }
 
 const PreviewPostCard = ({ post }: IProps) => {
+  const { classes } = useStyles();
   const dispatch = useAppDispatch();
   const { user } = useSelector((state: RootState) => state.user);
 
@@ -109,7 +123,15 @@ const PreviewPostCard = ({ post }: IProps) => {
           </Text>
           <Group>
             <Text size={12} color="gray.6">
-              Posted by {post.user.username} 8 hours ago
+              Posted by{" "}
+              <Text
+                className={classes.link}
+                component={Link}
+                to={`/profile/${post.user._id}`}
+              >
+                {post.user.username}
+              </Text>{" "}
+              {dayjs(post.createdAt).fromNow()}
             </Text>
             <Text size={12} color="gray.6">
               {post.comments.length} <IconMessageDots size={12} />

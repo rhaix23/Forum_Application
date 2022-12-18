@@ -3,6 +3,7 @@ import {
   Alert,
   Box,
   Button,
+  createStyles,
   Divider,
   Flex,
   Group,
@@ -14,7 +15,7 @@ import {
 import { IconArrowUp, IconArrowDown, IconAlertCircle } from "@tabler/icons";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { RichTextContent, RichTextEditor } from ".";
 import {
   deletePost,
@@ -26,12 +27,25 @@ import {
 import { RootState, useAppDispatch } from "../store";
 import { IPost } from "../types/post.types";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
+const useStyles = createStyles((theme) => ({
+  link: {
+    color: theme.colors.blue[7],
+    ":hover": {
+      textDecoration: "underline",
+    },
+  },
+}));
 
 interface IProps {
   post: IPost;
 }
 
 const PostCard = ({ post }: IProps) => {
+  const { classes } = useStyles();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -112,6 +126,7 @@ const PostCard = ({ post }: IProps) => {
             content={post.body}
             setContent={setBody}
             status={status}
+            limit={3000}
           />
         </Box>
         <Group position="right">
@@ -141,7 +156,15 @@ const PostCard = ({ post }: IProps) => {
         <Flex justify="center" direction="column" sx={{ width: "100%" }}>
           <Group>
             <Text size={12} color="gray.6">
-              Posted by {post.user.username} 8 hours ago
+              Posted by{" "}
+              <Text
+                component={Link}
+                to={`/profile/${post.user._id}`}
+                className={classes.link}
+              >
+                {post.user.username}
+              </Text>{" "}
+              {dayjs(post.createdAt).fromNow()}
             </Text>
           </Group>
           <Text size={20} weight="bold" mb={8}>
