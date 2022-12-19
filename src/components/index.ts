@@ -14,6 +14,9 @@ import { Footer } from "./Footer";
 import { ProfileMenuPosts } from "./ProfileMenuPosts";
 import { ProfileMenuComments } from "./ProfileMenuComments";
 import { ProfileMenuUserAccount } from "./ProfileMenuUserAccount";
+import { AdminNavbar } from "./AdminNavbar";
+import { AdminRoute } from "./AdminRoute";
+import { UserButton } from "./UserButton";
 
 export {
   ThemeColorToggle,
@@ -32,4 +35,7 @@ export {
   ProfileMenuPosts,
   ProfileMenuComments,
   ProfileMenuUserAccount,
+  AdminNavbar,
+  AdminRoute,
+  UserButton,
 };

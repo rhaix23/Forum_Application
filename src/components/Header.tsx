@@ -53,11 +53,19 @@ const HeaderComponent = () => {
   const { classes } = useStyles();
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
-  const { user, status } = useSelector((state: RootState) => state.user);
+  const { user } = useSelector((state: RootState) => state.user);
   const [opened, setOpened] = useState(false);
 
   const renderLinks = links.map((link, index) => {
     if (link.text === "Profile" && !user) {
+      return null;
+    }
+
+    if (link.text === "Admin" && !user) {
+      return null;
+    }
+
+    if (link.text === "Admin" && user?.role !== "admin") {
       return null;
     }
 
