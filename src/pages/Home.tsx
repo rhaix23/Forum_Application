@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Loader } from "../components/Loader";
-import { fetchCategories } from "../features/category/categoryThunks";
+import { getCategories } from "../features/category/categoryThunks";
 import { AppDispatch, RootState } from "../store";
 
 const useStyles = createStyles((theme) => ({
@@ -35,7 +35,7 @@ const Home = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(getCategories());
   }, []);
 
   if (status === "pending") {

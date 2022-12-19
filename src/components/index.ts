@@ -17,6 +17,10 @@ import { ProfileMenuUserAccount } from "./ProfileMenuUserAccount";
 import { AdminNavbar } from "./AdminNavbar";
 import { AdminRoute } from "./AdminRoute";
 import { UserButton } from "./UserButton";
+import { CreateCategoryModal } from "./CreateCategoryModal";
+import { SingleCategoryRow } from "./SingleCategoryRow";
+import { UpdateCategoryModal } from "./UpdateCategoryModal";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 export {
   ThemeColorToggle,
@@ -38,4 +42,8 @@ export {
   AdminNavbar,
   AdminRoute,
   UserButton,
+  CreateCategoryModal,
+  SingleCategoryRow,
+  UpdateCategoryModal,
+  ConfirmationModal,
 };

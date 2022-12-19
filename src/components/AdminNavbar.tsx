@@ -1,14 +1,6 @@
 import { useState } from "react";
-import { createStyles, Navbar, Group, Code, Text } from "@mantine/core";
+import { createStyles, Navbar, Text } from "@mantine/core";
 import {
-  IconBellRinging,
-  IconFingerprint,
-  IconKey,
-  IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
-  IconSwitchHorizontal,
   IconLogout,
   IconCategory,
   IconInbox,

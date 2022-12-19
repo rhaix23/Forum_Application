@@ -5,11 +5,11 @@ import { ICategory } from "../../types/category.types";
 import { api } from "../../utils/axios";
 
 // @desc    Fetch all categories
-export const fetchCategories = createAsyncThunk<
+export const getCategories = createAsyncThunk<
   { categories: ICategory[] },
   void,
   { rejectValue: string }
->("category/fetchCategories", async (_, thunkAPI) => {
+>("category/getCategories", async (_, thunkAPI) => {
   try {
     const response = await api.get("/category");
     return response.data;

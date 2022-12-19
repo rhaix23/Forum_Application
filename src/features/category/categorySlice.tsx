@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Status } from "../../types/app.types";
 import { ICategory } from "../../types/category.types";
-import { fetchCategories } from "./categoryThunks";
+import { getCategories } from "./categoryThunks";
 
 interface ICategorySliceState {
   categories: ICategory[];
@@ -18,14 +18,14 @@ const categorySlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchCategories.pending, (state) => {
+    builder.addCase(getCategories.pending, (state) => {
       state.status = "pending";
     });
-    builder.addCase(fetchCategories.fulfilled, (state, action) => {
+    builder.addCase(getCategories.fulfilled, (state, action) => {
       state.categories = action.payload.categories;
       state.status = "resolved";
     });
-    builder.addCase(fetchCategories.rejected, (state) => {
+    builder.addCase(getCategories.rejected, (state) => {
       state.status = "rejected";
     });
   },
