@@ -50,6 +50,7 @@ export const ProfileMenuUserAccount = () => {
     github: profile.github,
     linkedin: profile.linkedin,
     email: profile.email,
+    isDisabled: profile.isDisabled,
   });
 
   const [about, setAbout] = useState(profile.about);

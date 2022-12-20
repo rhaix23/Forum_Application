@@ -158,14 +158,10 @@ export const AdminNavbar = ({ opened, user }: IProps) => {
       <Navbar.Section grow>{links}</Navbar.Section>
 
       <Navbar.Section className={classes.footer}>
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
+        <Text component={Link} to="/" className={classes.link}>
           <IconBoxMultiple className={classes.linkIcon} stroke={1.5} />
           <span>Go to website</span>
-        </a>
+        </Text>
 
         <a
           href="#"

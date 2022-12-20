@@ -8,10 +8,12 @@ export interface ICategory {
   updatedAt: Date;
 }
 
-export interface ISubcategory {
+export interface ISubcategoryIdAndName {
   _id: string;
   name: string;
+}
+
+export interface ISubcategory extends ISubcategoryIdAndName {
   description: string;
   category: ICategory;
-  posts: IPost[];
 }

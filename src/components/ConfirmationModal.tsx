@@ -5,6 +5,9 @@ interface IProps {
   opened: boolean;
   setOpened: Dispatch<React.SetStateAction<boolean>>;
   title?: string;
+  text?: string;
+  confirmationText?: string;
+  confirmationColor?: string;
   handleClick: any;
 }
 
@@ -12,6 +15,9 @@ export const ConfirmationModal = ({
   opened,
   setOpened,
   title = "Are you sure?",
+  text = "This action cannot be undone.",
+  confirmationText = "Delete",
+  confirmationColor = "red",
   handleClick,
 }: IProps) => {
   return (
@@ -21,13 +27,13 @@ export const ConfirmationModal = ({
       title={title}
       centered
     >
-      <Text>This action cannot be undone.</Text>
+      <Text>{text}</Text>
       <Group position="right" mt={16}>
         <Button size="xs" color="gray" onClick={() => setOpened(false)}>
           Cancel
         </Button>
-        <Button size="xs" color="red" onClick={handleClick}>
-          Delete
+        <Button size="xs" color={confirmationColor} onClick={handleClick}>
+          {confirmationText}
         </Button>
       </Group>
     </Modal>

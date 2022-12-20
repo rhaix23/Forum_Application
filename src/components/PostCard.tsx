@@ -79,7 +79,7 @@ const PostCard = ({ post }: IProps) => {
     if (id) {
       dispatch(deletePost({ id }));
       setIsDeleting(false);
-      navigate(`/${post.subcategory}`);
+      navigate(`/${post.subcategory._id}`);
     }
   };
 

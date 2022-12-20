@@ -27,16 +27,11 @@ export const SingleCategoryRow = ({ category }: IProps) => {
       />
       <tr>
         <td>
-          <Text align="center">{category._id}</Text>
-        </td>
-        <td>
-          <Text align="center">{category.name}</Text>
+          <Text>{category.name}</Text>
         </td>
         <td>
           {category.subcategories.map((subcategory) => (
-            <Text key={subcategory._id} align="center">
-              {subcategory.name}
-            </Text>
+            <Text key={subcategory._id}>{subcategory.name}</Text>
           ))}
         </td>
         <td>

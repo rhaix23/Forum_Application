@@ -10,12 +10,12 @@ interface IProps {
 export const AdminRoute = ({ children }: IProps) => {
   const { user, status } = useSelector((state: RootState) => state.user);
 
-  if (status === "pending") {
-    return <Loader variant="dots" />;
-  }
-
-  if (user && user.role !== "admin") {
+  if (!user) {
     return <Navigate to="/" replace />;
+  } else {
+    if (user.role !== "admin") {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <>{children}</>;

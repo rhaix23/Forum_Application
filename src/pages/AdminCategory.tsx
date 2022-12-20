@@ -1,4 +1,4 @@
-import { Box, Button, Table } from "@mantine/core";
+import { Box, Button, Table, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -43,10 +43,11 @@ export const AdminCategory = () => {
         withColumnBorders
       >
         <thead>
-          <th>ID</th>
-          <th>Category Name</th>
-          <th>Subcategories</th>
-          <th>Actions</th>
+          <tr>
+            <th>Name</th>
+            <th>Subcategories</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>{renderRows}</tbody>
       </Table>
