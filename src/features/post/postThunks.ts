@@ -1,8 +1,23 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { KnownError } from "../../types/app.types";
 import { IPost } from "../../types/post.types";
 import { api } from "../../utils/axios";
+
+export const getPosts = createAsyncThunk<
+  { posts: IPost[] },
+  void,
+  { rejectValue: string }
+>("post/getPosts", async (_, thunkAPI) => {
+  try {
+    const response = await api.get(`/post`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+    return thunkAPI.rejectWithValue("Something went wrong");
+  }
+});
 
 // @desc    Get posts for a subcategory
 export const getSubcategoryPosts = createAsyncThunk<
@@ -67,6 +82,8 @@ export const editPost = createAsyncThunk<
     id: string;
     title: string;
     body: string;
+    subcategoryId?: string;
+    lockPost?: boolean;
   },
   { rejectValue: string }
 >("post/editPost", async (post, thunkAPI) => {
@@ -83,7 +100,7 @@ export const editPost = createAsyncThunk<
 
 // @desc    Delete a post
 export const deletePost = createAsyncThunk<
-  void,
+  { id: string },
   { id: string },
   { rejectValue: string }
 >("post/deletePost", async ({ id }, thunkAPI) => {

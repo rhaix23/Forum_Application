@@ -6,6 +6,7 @@ import {
   deletePost,
   deletePostRate,
   editPost,
+  getPosts,
   getSinglePost,
   getSubcategoryPosts,
   getUserPosts,
@@ -35,6 +36,16 @@ const postSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(getPosts.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(getPosts.fulfilled, (state, action) => {
+      state.posts = action.payload.posts;
+      state.status = "resolved";
+    });
+    builder.addCase(getPosts.rejected, (state) => {
+      state.status = "rejected";
+    });
     builder.addCase(getSubcategoryPosts.pending, (state) => {
       state.status = "pending";
     });
@@ -82,9 +93,15 @@ const postSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(editPost.fulfilled, (state, action) => {
-      state.post = action.payload.post;
+      const updatedPost = action.payload.post;
+      state.post = updatedPost;
+      state.posts = state.posts.map((post) => {
+        if (post._id === updatedPost._id) {
+          return updatedPost;
+        }
+        return post;
+      });
       state.status = "resolved";
-      toast.success("Post has been updated");
     });
     builder.addCase(editPost.rejected, (state, action) => {
       state.status = "rejected";
@@ -93,9 +110,11 @@ const postSlice = createSlice({
     builder.addCase(deletePost.pending, (state) => {
       state.status = "pending";
     });
-    builder.addCase(deletePost.fulfilled, (state) => {
+    builder.addCase(deletePost.fulfilled, (state, action) => {
+      state.posts = state.posts.filter(
+        (post) => post._id !== action.payload.id
+      );
       state.status = "resolved";
-      toast.success("Post has been deleted");
     });
     builder.addCase(deletePost.rejected, (state, action) => {
       state.status = "rejected";
