@@ -1,5 +1,4 @@
-import { IPost } from "./post.types";
-import { IUser } from "./user.types";
+export type IRatingId = string;
 
 export interface IRating {
   _id: string;
