@@ -3,6 +3,23 @@ import { AxiosError } from "axios";
 import { IComment } from "../../types/comment.types";
 import { api } from "../../utils/axios";
 
+// @desc    Get all comments
+export const getComments = createAsyncThunk<
+  { comments: IComment[] },
+  void,
+  { rejectValue: string }
+>("comment/getComments", async (_, thunkAPI) => {
+  try {
+    const response = await api.get(`/comment`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+    return thunkAPI.rejectWithValue("Something went wrong");
+  }
+});
+
 // @desc    Get all comments for a post
 export const getPostComments = createAsyncThunk<
   { comments: IComment[] },
@@ -58,13 +75,12 @@ export const updateComment = createAsyncThunk<
 
 // @desc    Delete a comment
 export const deleteComment = createAsyncThunk<
-  void,
-  { commentId: string; postId: string },
+  { id: string },
+  { commentId: string },
   { rejectValue: string }
->("comment/deleteComment", async ({ commentId, postId }, thunkAPI) => {
+>("comment/deleteComment", async ({ commentId }, thunkAPI) => {
   try {
     const response = await api.delete(`/comment/${commentId}`);
-    thunkAPI.dispatch(getPostComments({ id: postId }));
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

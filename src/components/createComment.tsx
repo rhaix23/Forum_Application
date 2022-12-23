@@ -20,14 +20,10 @@ export const CreateComment = () => {
     }
   };
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <Box>
       <Text size={12} color="gray.6">
-        Comment as {user.username}
+        Comment as {user && user.username}
       </Text>
       <RichTextEditor
         content={newComment}

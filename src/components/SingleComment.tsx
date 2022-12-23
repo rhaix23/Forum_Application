@@ -46,9 +46,7 @@ export const SingleComment = ({ comment }: IProps) => {
 
   const handleDelete = () => {
     if (id) {
-      dispatch(
-        deleteComment({ commentId: comment._id, postId: comment.post._id })
-      );
+      dispatch(deleteComment({ commentId: comment._id }));
       setIsDeleting(false);
     }
   };
@@ -92,7 +90,7 @@ export const SingleComment = ({ comment }: IProps) => {
                 size={12}
                 component={Link}
                 color="blue.6"
-                to={`/post/${comment.post._id}`}
+                to={`/post/${comment.post?._id}`}
                 sx={{
                   fontStyle: "italic",
                   ":hover": {
@@ -100,7 +98,7 @@ export const SingleComment = ({ comment }: IProps) => {
                   },
                 }}
               >
-                {comment.post.title}
+                {comment.post?.title}
               </Text>
             </>
           )}
