@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createStyles, Navbar, Text } from "@mantine/core";
+import { Button, createStyles, Navbar, Text } from "@mantine/core";
 import {
   IconLogout,
   IconCategory,
@@ -10,9 +10,12 @@ import {
   IconBoxMultiple,
   IconSelector,
 } from "@tabler/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserButton } from "./UserButton";
 import { IUser } from "../types/user.types";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/user/userThunks";
+import { useAppDispatch } from "../store";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -107,7 +110,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 const data = [
-  { link: "/admin/category", label: "Categories", icon: IconCategory },
+  { link: "/admin", label: "Categories", icon: IconCategory },
   { link: "/admin/subcategory", label: "Subcategories", icon: IconCategory2 },
   { link: "/admin/posts", label: "Posts", icon: IconInbox },
   { link: "/admin/comments", label: "Comments", icon: IconMessageCircle },
@@ -120,8 +123,15 @@ interface IProps {
 }
 
 export const AdminNavbar = ({ opened, user }: IProps) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState("Billing");
+  const [active, setActive] = useState("Categories");
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    navigate("/");
+  };
 
   const links = data.map((item) => (
     <Text
@@ -163,14 +173,14 @@ export const AdminNavbar = ({ opened, user }: IProps) => {
           <span>Go to website</span>
         </Text>
 
-        <a
-          href="#"
+        <Text
           className={classes.link}
-          onClick={(event) => event.preventDefault()}
+          onClick={handleLogout}
+          sx={{ cursor: "pointer" }}
         >
           <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Logout</span>
-        </a>
+        </Text>
       </Navbar.Section>
     </Navbar>
   );
