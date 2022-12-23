@@ -1,5 +1,7 @@
 import { Button, Group, Modal, TextInput } from "@mantine/core";
 import { Dispatch, useState } from "react";
+import { updateCategory } from "../features/category/categoryThunks";
+import { useAppDispatch } from "../store";
 import { ICategory } from "../types/category.types";
 
 interface IProps {
@@ -13,7 +15,13 @@ export const UpdateCategoryModal = ({
   opened,
   setOpened,
 }: IProps) => {
+  const dispatch = useAppDispatch();
   const [name, setName] = useState(category.name);
+
+  const handleUpdate = () => {
+    dispatch(updateCategory({ categoryId: category._id, name }));
+    setOpened(false);
+  };
 
   return (
     <Modal
@@ -35,7 +43,9 @@ export const UpdateCategoryModal = ({
         <Button size="xs" color="gray" onClick={() => setOpened(false)}>
           Cancel
         </Button>
-        <Button size="xs">Save</Button>
+        <Button size="xs" onClick={handleUpdate}>
+          Save
+        </Button>
       </Group>
     </Modal>
   );

@@ -111,11 +111,16 @@ export const createSubcategory = createAsyncThunk<
 // @desc   Update a subcategory
 export const updateSubcategory = createAsyncThunk<
   { subcategory: ISubcategory },
-  { subcategoryId: string; name: string; description: string },
+  {
+    subcategoryId: string;
+    name: string;
+    description: string;
+    categoryId: string;
+  },
   { rejectValue: string }
 >("category/updateSubcategory", async (updatedSubcategoryDetails, thunkAPI) => {
   try {
-    const response = await api.post(
+    const response = await api.patch(
       `/subcategory/${updatedSubcategoryDetails.subcategoryId}`,
       updatedSubcategoryDetails
     );

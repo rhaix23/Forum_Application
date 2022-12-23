@@ -44,9 +44,9 @@ export const AdminCategory = () => {
       >
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Subcategories</th>
-            <th>Actions</th>
+            <th style={{ textAlign: "center" }}>Name</th>
+            <th style={{ textAlign: "center" }}>Subcategories</th>
+            <th style={{ textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
         <tbody>{renderRows}</tbody>
