@@ -22,7 +22,9 @@ export const ProfileMenuComments = () => {
 
   const renderComments =
     userComments &&
-    userComments.map((comment) => <SingleComment comment={comment} />);
+    userComments.map((comment, index) => (
+      <SingleComment key={comment._id || index} comment={comment} />
+    ));
 
   return <Stack>{renderComments}</Stack>;
 };
