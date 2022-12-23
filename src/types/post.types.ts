@@ -12,7 +12,8 @@ export interface IPost {
   comments: IComment[];
   likes: IRating[];
   dislikes: IRating[];
-  locked: boolean;
+  isLocked: boolean;
+  isRemoved: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

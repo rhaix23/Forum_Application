@@ -74,7 +74,6 @@ const App = () => {
               }
             >
               <Route index element={<AdminCategory />} />
-              <Route index path="/admin/category" element={<AdminCategory />} />
               <Route path="/admin/subcategory" element={<AdminSubcategory />} />
               <Route path="/admin/posts" element={<AdminPosts />} />
               <Route path="/admin/comments" element={<AdminComments />} />

@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 
 declare module "axios" {
   export interface AxiosRequestConfig {
-    sent?: boolean;
+    _retry?: boolean;
   }
 }
 
@@ -16,8 +16,12 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const prevRequest = error.config;
     if (prevRequest) {
-      if (error.response!.status === 403 && !prevRequest.sent) {
-        prevRequest.sent = true;
+      if (
+        error.response!.status === 401 &&
+        !prevRequest._retry &&
+        prevRequest.url !== "/users/login"
+      ) {
+        prevRequest._retry = true;
         await api.get("/users/refresh");
         return api(prevRequest);
       }
