@@ -13,7 +13,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconArrowUp, IconArrowDown, IconAlertCircle } from "@tabler/icons";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RichTextContent, RichTextEditor } from ".";
@@ -22,6 +22,7 @@ import {
   deletePostRate,
   editPost,
   ratePost,
+  removePost,
   updatePostRate,
 } from "../features/post/postThunks";
 import { RootState, useAppDispatch } from "../store";
@@ -29,6 +30,7 @@ import { IPost } from "../types/post.types";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Loader } from "./Loader";
 dayjs.extend(relativeTime);
 
 const useStyles = createStyles((theme) => ({
@@ -45,16 +47,23 @@ interface IProps {
 }
 
 const PostCard = ({ post }: IProps) => {
-  const { classes } = useStyles();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { classes } = useStyles();
   const { id } = useParams();
-  const [title, setTitle] = useState(post.title || "");
-  const [body, setBody] = useState(post.body || "");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
   const { status, error } = useSelector((state: RootState) => state.post);
+
+  console.log(post);
+
+  useEffect(() => {
+    setTitle(post.title);
+    setBody(post.body);
+  }, [post]);
 
   const userLiked = useMemo(() => {
     if (user) {
@@ -70,16 +79,23 @@ const PostCard = ({ post }: IProps) => {
 
   const handleEdit = () => {
     if (id) {
-      dispatch(editPost({ id, title, body }));
+      dispatch(
+        editPost({
+          id,
+          title,
+          body,
+          subcategoryId: post.subcategory._id,
+          lockPost: post.isLocked,
+        })
+      );
       setIsEditing(false);
     }
   };
 
   const handleDelete = () => {
     if (id) {
-      dispatch(deletePost({ id }));
+      dispatch(removePost({ id }));
       setIsDeleting(false);
-      navigate(`/${post.subcategory._id}`);
     }
   };
 
@@ -157,13 +173,17 @@ const PostCard = ({ post }: IProps) => {
           <Group>
             <Text size={12} color="gray.6">
               Posted by{" "}
-              <Text
-                component={Link}
-                to={`/profile/${post.user._id}`}
-                className={classes.link}
-              >
-                {post.user.username}
-              </Text>{" "}
+              {post.isRemoved ? (
+                <Text>[removed]</Text>
+              ) : (
+                <Text
+                  component={Link}
+                  to={`/profile/${post.user._id}`}
+                  className={classes.link}
+                >
+                  {post.user.username}
+                </Text>
+              )}{" "}
               {dayjs(post.createdAt).fromNow()}
             </Text>
           </Group>
@@ -187,7 +207,7 @@ const PostCard = ({ post }: IProps) => {
                 onClick={() => setIsDeleting(true)}
                 compact
               >
-                Delete
+                Remove
               </Button>
             </Group>
           )}
@@ -198,7 +218,7 @@ const PostCard = ({ post }: IProps) => {
                 title="Are you sure?"
                 color="red"
               >
-                This action cannot be undone. Do you want to delete this post?
+                Do you want to remove this post?
               </Alert>
               <Group position="right" mt={16}>
                 <Button
@@ -225,6 +245,10 @@ const PostCard = ({ post }: IProps) => {
         </Flex>
       </Box>
     );
+  }
+
+  if (status === "pending") {
+    return <Loader />;
   }
 
   if (status === "rejected") {
@@ -255,7 +279,11 @@ const PostCard = ({ post }: IProps) => {
 
       <Divider mx={16} orientation="vertical" />
 
-      {content}
+      {post.isRemoved ? (
+        <Text fs="italic">Post has been removed</Text>
+      ) : (
+        <>{content}</>
+      )}
     </Paper>
   );
 };

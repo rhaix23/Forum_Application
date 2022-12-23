@@ -9,7 +9,12 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { IconArrowUp, IconArrowDown, IconMessageDots } from "@tabler/icons";
+import {
+  IconArrowUp,
+  IconArrowDown,
+  IconMessageDots,
+  IconLock,
+} from "@tabler/icons";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -88,7 +93,7 @@ const PreviewPostCard = ({ post }: IProps) => {
       shadow="xs"
       px={16}
       withBorder
-      sx={{ display: "flex" }}
+      sx={{ display: "flex", position: "relative" }}
     >
       <Stack py={4} sx={{ gap: 0 }}>
         <ActionIcon
@@ -118,27 +123,30 @@ const PreviewPostCard = ({ post }: IProps) => {
         to={`/post/${post._id}`}
       >
         <Flex justify="center" direction="column" sx={{ width: "100%" }}>
-          <Text weight="bold" mb={4}>
-            {post.title}
+          <Flex justify="space-between" align="center" mt={25}>
+            <Text weight="bold" mb={4}>
+              {post.title}
+            </Text>
+            {post.isLocked && <IconLock size={20} />}
+          </Flex>
+          <Text size={12} color="gray.6">
+            {post.comments.length} replies
           </Text>
-          <Group>
-            <Text size={12} color="gray.6">
-              Posted by{" "}
-              <Text
-                className={classes.link}
-                component={Link}
-                to={`/profile/${post.user._id}`}
-              >
-                {post.user.username}
-              </Text>{" "}
-              {dayjs(post.createdAt).fromNow()}
-            </Text>
-            <Text size={12} color="gray.6">
-              {post.comments.length} <IconMessageDots size={12} />
-            </Text>
-          </Group>
         </Flex>
       </Box>
+      <Group sx={{ position: "absolute", left: 65, top: 5 }}>
+        <Text size={12} color="gray.6">
+          Posted by{" "}
+          <Text
+            className={classes.link}
+            component={Link}
+            to={`/profile/${post.user._id}`}
+          >
+            {post.user.username}
+          </Text>{" "}
+          {dayjs(post.createdAt).fromNow()}
+        </Text>
+      </Group>
     </Paper>
   );
 };
