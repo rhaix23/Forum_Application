@@ -5,24 +5,29 @@ import {
   changePassword,
   getMe,
   getSingleUser,
+  getUsers,
   login,
   logout,
   register,
+  updateAccountStatus,
   updateUser,
 } from "./userThunks";
 import { toast } from "react-toastify";
-import { Action } from "@remix-run/router";
 
 interface IUserSliceState {
+  users: IUser[];
   user: IUser | null;
   profile: IUser | null;
   status: Status;
+  error: string;
 }
 
 const initialState: IUserSliceState = {
+  users: [],
   user: null,
   profile: null,
   status: "idle",
+  error: "",
 };
 
 const userSlice = createSlice({
@@ -39,6 +44,7 @@ const userSlice = createSlice({
       toast.success("Registered successfully. Logging in...");
     });
     builder.addCase(register.rejected, (state, action) => {
+      action.payload && (state.error = action.payload);
       state.status = "rejected";
       toast.error(action.payload);
     });
@@ -51,8 +57,9 @@ const userSlice = createSlice({
       toast.success("Logged in successfully.");
     });
     builder.addCase(login.rejected, (state, action) => {
-      state.status = "rejected";
+      action.payload && (state.error = action.payload);
       toast.error(action.payload);
+      state.status = "rejected";
     });
     builder.addCase(getMe.pending, (state) => {
       state.status = "pending";
@@ -61,17 +68,19 @@ const userSlice = createSlice({
       state.user = action.payload.user;
       state.status = "resolved";
     });
-    builder.addCase(getMe.rejected, (state) => {
+    builder.addCase(getMe.rejected, (state, action) => {
       state.status = "rejected";
+      action.payload && (state.error = action.payload);
     });
     builder.addCase(logout.pending, (state) => {
       state.status = "pending";
     });
-    builder.addCase(logout.fulfilled, (state, action) => {
+    builder.addCase(logout.fulfilled, (state) => {
       state.user = null;
       state.status = "resolved";
     });
-    builder.addCase(logout.rejected, (state) => {
+    builder.addCase(logout.rejected, (state, action) => {
+      action.payload && (state.error = action.payload);
       state.status = "rejected";
     });
     builder.addCase(getSingleUser.pending, (state) => {
@@ -83,6 +92,7 @@ const userSlice = createSlice({
     });
     builder.addCase(getSingleUser.rejected, (state, action) => {
       state.status = "rejected";
+      action.payload && (state.error = action.payload);
       toast.error(action.payload);
     });
     builder.addCase(changePassword.pending, (state) => {
@@ -94,6 +104,7 @@ const userSlice = createSlice({
     });
     builder.addCase(changePassword.rejected, (state, action) => {
       state.status = "rejected";
+      action.payload && (state.error = action.payload);
       toast.error(action.payload);
     });
     builder.addCase(updateUser.pending, (state) => {
@@ -109,7 +120,35 @@ const userSlice = createSlice({
     });
     builder.addCase(updateUser.rejected, (state, action) => {
       state.status = "rejected";
+      action.payload && (state.error = action.payload);
       toast.error(action.payload);
+    });
+    builder.addCase(getUsers.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(getUsers.fulfilled, (state, action) => {
+      state.users = action.payload.users;
+      state.status = "resolved";
+    });
+    builder.addCase(getUsers.rejected, (state, action) => {
+      state.status = "rejected";
+      action.payload && (state.error = action.payload);
+    });
+    builder.addCase(updateAccountStatus.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(updateAccountStatus.fulfilled, (state, action) => {
+      state.users = state.users.map((user) => {
+        if (user._id === action.payload.user._id) {
+          return action.payload.user;
+        }
+        return user;
+      });
+      state.status = "resolved";
+    });
+    builder.addCase(updateAccountStatus.rejected, (state, action) => {
+      action.payload && (state.error = action.payload);
+      state.status = "rejected";
     });
   },
 });
