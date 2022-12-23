@@ -18,13 +18,10 @@ export const ViewPostModal = ({ post, opened, setOpened }: IProps) => {
     <Modal
       opened={opened}
       onClose={() => setOpened(false)}
-      title="View Post"
+      title={post.title}
       size="lg"
       centered
     >
-      <Text size={20} weight={500} mb={8}>
-        {post.title}
-      </Text>
       <RichTextContent>{post.body}</RichTextContent>
       <Group position="right" mt={16}>
         <Button size="xs" color="gray" onClick={() => setOpened(false)}>

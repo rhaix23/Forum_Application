@@ -10,7 +10,9 @@ import {
 } from "@mantine/core";
 import { Dispatch, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { toast } from "react-toastify";
+import { editPost } from "../features/post/postThunks";
+import { RootState, useAppDispatch } from "../store";
 import { IPost } from "../types/post.types";
 import { RichTextEditor } from "./RichTextEditor";
 
@@ -21,12 +23,33 @@ interface IProps {
 }
 
 export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
+  const dispatch = useAppDispatch();
   const { status } = useSelector((state: RootState) => state.post);
   const { subcategories } = useSelector((state: RootState) => state.category);
   const [title, setTitle] = useState(post.title);
   const [body, setBody] = useState(post.body);
   const [subcategory, setSubcategory] = useState(post.subcategory.name);
-  const [isLocked, setIsLocked] = useState(post.locked);
+  const [isLocked, setIsLocked] = useState(post.isLocked);
+
+  const handleSubmit = () => {
+    const subcategoryFound = subcategories.find((s) => s.name === subcategory);
+
+    if (!subcategoryFound) {
+      toast.error("Subcategory not found");
+      return;
+    }
+
+    dispatch(
+      editPost({
+        id: post._id,
+        title,
+        body,
+        subcategoryId: subcategoryFound._id,
+        lockPost: isLocked,
+      })
+    );
+    setOpened(false);
+  };
 
   return (
     <Modal
@@ -71,7 +94,9 @@ export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
         <Button size="xs" color="gray" onClick={() => setOpened(false)}>
           Cancel
         </Button>
-        <Button size="xs">Save</Button>
+        <Button size="xs" onClick={handleSubmit}>
+          Save
+        </Button>
       </Group>
     </Modal>
   );

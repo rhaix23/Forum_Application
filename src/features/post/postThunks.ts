@@ -82,8 +82,8 @@ export const editPost = createAsyncThunk<
     id: string;
     title: string;
     body: string;
-    subcategoryId?: string;
-    lockPost?: boolean;
+    subcategoryId: string;
+    lockPost: boolean;
   },
   { rejectValue: string }
 >("post/editPost", async (post, thunkAPI) => {
@@ -98,7 +98,7 @@ export const editPost = createAsyncThunk<
   }
 });
 
-// @desc    Delete a post
+// @desc    Delete a post from the database
 export const deletePost = createAsyncThunk<
   { id: string },
   { id: string },
@@ -106,6 +106,24 @@ export const deletePost = createAsyncThunk<
 >("post/deletePost", async ({ id }, thunkAPI) => {
   try {
     const response = await api.delete(`/post/${id}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+    return thunkAPI.rejectWithValue("Something went wrong");
+  }
+});
+
+// @desc    Remove a post
+export const removePost = createAsyncThunk<
+  { post: IPost },
+  { id: string },
+  { rejectValue: string }
+>("post/removePost", async ({ id }, thunkAPI) => {
+  console.log(id);
+  try {
+    const response = await api.patch(`/post/remove/${id}`);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

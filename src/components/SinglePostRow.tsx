@@ -7,6 +7,8 @@ import { ConfirmationModal } from "./ConfirmationModal";
 import { UpdatePostModal } from "./UpdatePostModal";
 import { ViewPostModal } from "./ViewPostModal";
 import dayjs from "dayjs";
+import { useAppDispatch } from "../store";
+import { deletePost } from "../features/post/postThunks";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -23,10 +25,16 @@ interface IProps {
 }
 
 export const SinglePostRow = ({ post }: IProps) => {
+  const dispatch = useAppDispatch();
   const { classes } = useStyles();
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const handleDelete = () => {
+    dispatch(deletePost({ id: post._id }));
+    setOpenDeleteModal(false);
+  };
 
   return (
     <>
@@ -43,7 +51,7 @@ export const SinglePostRow = ({ post }: IProps) => {
       <ConfirmationModal
         opened={openDeleteModal}
         setOpened={setOpenDeleteModal}
-        handleClick={() => console.log("delete")}
+        handleClick={handleDelete}
       />
       <tr>
         <td>
@@ -64,11 +72,7 @@ export const SinglePostRow = ({ post }: IProps) => {
             {post.user.username}
           </Text>
         </td>
-        <td>
-          <Text>{dayjs(post.createdAt).format("MM/DD/YYYY")}</Text>
-        </td>
-        <td>{post.subcategory.name}</td>
-        <td>{String(post.locked)}</td>
+        <td>{String(post.isLocked)}</td>
         <td>
           <Flex justify="center" align="center">
             <Menu shadow="md">

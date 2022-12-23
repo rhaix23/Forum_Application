@@ -11,6 +11,7 @@ import {
   getSubcategoryPosts,
   getUserPosts,
   ratePost,
+  removePost,
   updatePostRate,
 } from "./postThunks";
 import { toast } from "react-toastify";
@@ -94,6 +95,7 @@ const postSlice = createSlice({
     });
     builder.addCase(editPost.fulfilled, (state, action) => {
       const updatedPost = action.payload.post;
+      console.log(updatedPost);
       state.post = updatedPost;
       state.posts = state.posts.map((post) => {
         if (post._id === updatedPost._id) {
@@ -161,6 +163,17 @@ const postSlice = createSlice({
       state.status = "resolved";
     });
     builder.addCase(getUserPosts.rejected, (state, action) => {
+      state.status = "rejected";
+      action.payload && (state.error = action.payload);
+    });
+    builder.addCase(removePost.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(removePost.fulfilled, (state, action) => {
+      state.post = action.payload.post;
+      state.status = "resolved";
+    });
+    builder.addCase(removePost.rejected, (state, action) => {
       state.status = "rejected";
       action.payload && (state.error = action.payload);
     });

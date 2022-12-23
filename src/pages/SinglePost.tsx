@@ -1,5 +1,5 @@
-import { Button, Divider, Text } from "@mantine/core";
-import { IconChevronLeft } from "@tabler/icons";
+import { Alert, Button, Divider, Text } from "@mantine/core";
+import { IconAlertCircle, IconChevronLeft } from "@tabler/icons";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -37,13 +37,22 @@ const SinglePost = () => {
 
       <Divider variant="dotted" my={32} />
 
-      {!user && (
+      {post?.isLocked ? (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title="Attention users"
+          color="yellow"
+        >
+          This post has been locked and is no longer available for comments.
+          Thank you for your understanding.
+        </Alert>
+      ) : user ? (
+        <CreateComment />
+      ) : (
         <Text align="center" color="gray" size={14} mb={32}>
           You must be logged in to comment
         </Text>
       )}
-
-      <CreateComment />
 
       <PostComments />
     </section>

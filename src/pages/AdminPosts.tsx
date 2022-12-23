@@ -32,12 +32,10 @@ export const AdminPosts = () => {
       >
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Creator</th>
-            <th>Date</th>
-            <th>Subcategory</th>
-            <th>Locked</th>
-            <th>Actions</th>
+            <th style={{ textAlign: "center" }}>Title</th>
+            <th style={{ textAlign: "center" }}>Creator</th>
+            <th style={{ textAlign: "center" }}>Locked</th>
+            <th style={{ textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
         <tbody>{renderRows}</tbody>
