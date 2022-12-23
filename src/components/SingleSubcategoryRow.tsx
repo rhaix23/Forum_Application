@@ -1,6 +1,8 @@
 import { ActionIcon, Flex, Menu } from "@mantine/core";
 import { IconDots, IconPencil, IconTrash } from "@tabler/icons";
 import { useState } from "react";
+import { deleteSubcategory } from "../features/category/categoryThunks";
+import { useAppDispatch } from "../store";
 import { ISubcategory } from "../types/category.types";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { UpdateSubcategoryModal } from "./UpdateSubcategoryModal";
@@ -10,8 +12,14 @@ interface IProps {
 }
 
 export const SingleSubcategoryRow = ({ subcategory }: IProps) => {
+  const dispatch = useAppDispatch();
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const handleDelete = () => {
+    dispatch(deleteSubcategory({ subcategoryId: subcategory._id }));
+    setOpenDeleteModal(false);
+  };
 
   return (
     <>
@@ -23,7 +31,7 @@ export const SingleSubcategoryRow = ({ subcategory }: IProps) => {
       <ConfirmationModal
         opened={openDeleteModal}
         setOpened={setOpenDeleteModal}
-        handleClick={() => console.log("delete")}
+        handleClick={handleDelete}
       />
       <tr>
         <td>{subcategory.name}</td>

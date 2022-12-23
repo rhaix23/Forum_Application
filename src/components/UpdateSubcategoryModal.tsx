@@ -1,7 +1,9 @@
 import { Button, Group, Modal, NativeSelect, TextInput } from "@mantine/core";
 import { Dispatch, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { toast } from "react-toastify";
+import { updateSubcategory } from "../features/category/categoryThunks";
+import { RootState, useAppDispatch } from "../store";
 import { ISubcategory } from "../types/category.types";
 
 interface IProps {
@@ -15,10 +17,32 @@ export const UpdateSubcategoryModal = ({
   opened,
   setOpened,
 }: IProps) => {
+  const dispatch = useAppDispatch();
   const { categories } = useSelector((state: RootState) => state.category);
   const [name, setName] = useState(subcategory.name);
   const [description, setDescription] = useState(subcategory.description);
   const [category, setCategory] = useState(subcategory.category.name);
+
+  const handleSubmit = () => {
+    // implement this
+    const categoryFound = categories.find((c) => c.name === category);
+
+    if (!categoryFound) {
+      toast.error("Subcategory not found");
+      return;
+    }
+
+    dispatch(
+      updateSubcategory({
+        subcategoryId: subcategory._id,
+        name,
+        description,
+        categoryId: categoryFound._id,
+      })
+    );
+
+    setOpened(false);
+  };
 
   return (
     <Modal
@@ -62,7 +86,9 @@ export const UpdateSubcategoryModal = ({
         <Button size="xs" color="gray" onClick={() => setOpened(false)}>
           Cancel
         </Button>
-        <Button size="xs">Save</Button>
+        <Button size="xs" onClick={handleSubmit}>
+          Save
+        </Button>
       </Group>
     </Modal>
   );

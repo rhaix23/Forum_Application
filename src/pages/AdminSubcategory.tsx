@@ -49,10 +49,10 @@ export const AdminSubcategory = () => {
       >
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Actions</th>
+            <th style={{ textAlign: "center" }}>Name</th>
+            <th style={{ textAlign: "center" }}>Description</th>
+            <th style={{ textAlign: "center" }}>Category</th>
+            <th style={{ textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
         <tbody>{renderRows}</tbody>
