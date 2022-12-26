@@ -1,12 +1,4 @@
-import {
-  ActionIcon,
-  Button,
-  createStyles,
-  Flex,
-  Menu,
-  Text,
-} from "@mantine/core";
-import { IconBan, IconDots, IconPencil, IconTrash } from "@tabler/icons";
+import { Button, createStyles, Flex, Text } from "@mantine/core";
 import { useState } from "react";
 import { IUser } from "../types/user.types";
 import { ConfirmationModal } from "./ConfirmationModal";

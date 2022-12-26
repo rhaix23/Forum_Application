@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Status } from "../../types/app.types";
-import { IUser } from "../../types/user.types";
+import { IUser, IUserInformation } from "../../types/user.types";
 import {
   changePassword,
   getMe,
@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 interface IUserSliceState {
   users: IUser[];
   user: IUser | null;
-  profile: IUser | null;
+  profile: IUserInformation | null;
   status: Status;
   error: string;
 }
@@ -111,11 +111,11 @@ const userSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      state.status = "resolved";
       state.user = action.payload.user;
       if (state.profile && state.profile._id === action.payload.user._id) {
         state.profile = action.payload.user;
       }
+      state.status = "resolved";
       toast.success("Profile has been updated successfully.");
     });
     builder.addCase(updateUser.rejected, (state, action) => {

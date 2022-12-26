@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { EditableUser, IUser } from "../../types/user.types";
+import { IUser, IUserInformation } from "../../types/user.types";
 import { api } from "../../utils/axios";
 
 // @desc    Get all users
@@ -22,7 +22,7 @@ export const getUsers = createAsyncThunk<
 
 // @desc    Get single user
 export const getSingleUser = createAsyncThunk<
-  { user: IUser },
+  { user: IUserInformation },
   { userId: string },
   { rejectValue: string }
 >("users/getSingleUser", async ({ userId }, thunkAPI) => {
@@ -123,12 +123,20 @@ export const changePassword = createAsyncThunk<
 
 // @desc    Update user
 export const updateUser = createAsyncThunk<
-  { user: IUser },
-  { user: IUser },
+  { user: IUserInformation },
+  { user: IUserInformation },
   { rejectValue: string }
 >("users/updateUser", async ({ user }, thunkAPI) => {
   try {
-    const response = await api.patch(`/users/${user._id}`, user);
+    const response = await api.patch(`/users/${user._id}`, {
+      name: user.name,
+      position: user.position,
+      workingAt: user.workingAt,
+      about: user.about,
+      email: user.email,
+      linkedin: user.linkedin,
+      github: user.github,
+    });
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -138,6 +146,7 @@ export const updateUser = createAsyncThunk<
   }
 });
 
+// @desc    Update user's account status
 export const updateAccountStatus = createAsyncThunk<
   { user: IUser },
   { userId: string },

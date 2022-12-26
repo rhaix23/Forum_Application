@@ -2,6 +2,7 @@ import { Box, createStyles, Group, Paper, Text } from "@mantine/core";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { ImageWithTextAlert } from "../components";
 import { Loader } from "../components/Loader";
 import { getCategories } from "../features/category/categoryThunks";
 import { AppDispatch, RootState } from "../store";
@@ -41,7 +42,7 @@ const Home = () => {
   if (status === "pending") {
     return <Loader variant="dots" />;
   } else if (status === "rejected") {
-    return <Text>Something went wrong. Refresh the page.</Text>;
+    return <ImageWithTextAlert />;
   }
 
   const renderCategories = (

@@ -44,12 +44,12 @@ export const ProfileMenuUserAccount = () => {
   }
 
   const [userInfo, setUserInfo] = useState({
-    name: user ? user.name : "",
-    position: user ? user.position : "",
-    workingAt: user ? user.workingAt : "",
-    github: user ? user.github : "",
-    linkedin: user ? user.linkedin : "",
-    email: user ? user.email : "",
+    name: profile ? profile.name : "",
+    position: profile ? profile.position : "",
+    workingAt: profile ? profile.workingAt : "",
+    github: profile ? profile.github : "",
+    linkedin: profile ? profile.linkedin : "",
+    email: profile ? profile.email : "",
   });
 
   const [about, setAbout] = useState(profile.about);
@@ -60,14 +60,13 @@ export const ProfileMenuUserAccount = () => {
   };
 
   const handleSubmit = () => {
-    const completeUserInfo = { ...userInfo, about };
     if (user) {
-      // dispatch(updateUser({ userId: user._id, userInfo: completeUserInfo }));
       dispatch(
         updateUser({
           user: {
-            ...user,
+            ...profile,
             name: userInfo.name,
+            about,
             position: userInfo.position,
             workingAt: userInfo.workingAt,
             github: userInfo.github,

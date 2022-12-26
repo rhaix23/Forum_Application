@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, createStyles, Navbar, Text } from "@mantine/core";
+import { createStyles, Navbar, Text } from "@mantine/core";
 import {
   IconLogout,
   IconCategory,
@@ -13,7 +13,6 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { UserButton } from "./UserButton";
 import { IUser } from "../types/user.types";
-import { useDispatch } from "react-redux";
 import { logout } from "../features/user/userThunks";
 import { useAppDispatch } from "../store";
 
@@ -159,7 +158,7 @@ export const AdminNavbar = ({ opened, user }: IProps) => {
     >
       <Navbar.Section className={classes.section}>
         <UserButton
-          name={user.name || user.username}
+          name={user.username}
           role={user.role}
           icon={<IconSelector size={14} stroke={1.5} />}
         />

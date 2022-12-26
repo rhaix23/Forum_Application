@@ -1,8 +1,9 @@
-import { createStyles, Paper, Tabs } from "@mantine/core";
+import { Paper, Tabs } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
+  ImageWithTextAlert,
   ProfileMenuAccount,
   ProfileMenuComments,
   ProfileMenuPosts,
@@ -12,29 +13,8 @@ import { Loader } from "../components/Loader";
 import { getSingleUser } from "../features/user/userThunks";
 import { RootState, useAppDispatch } from "../store";
 
-const useStyles = createStyles((theme) => ({
-  linkPaper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  linkPaperDisabled: {
-    backgroundColor: theme.colors.gray[1],
-    cursor: "not-allowed",
-  },
-  linkPaperActive: {
-    cursor: "pointer",
-    transition: "background-color 0.2s ease-in-out",
-    "&:hover": {
-      backgroundColor: theme.colors.blue[9],
-    },
-  },
-}));
-
 const Profile = () => {
   const dispatch = useAppDispatch();
-  const { classes, cx } = useStyles();
   const { id } = useParams();
   const { user, profile, status } = useSelector(
     (state: RootState) => state.user
@@ -48,7 +28,9 @@ const Profile = () => {
   }, [id]);
 
   if (status === "pending") {
-    return <Loader />;
+    return <Loader variant="dots" />;
+  } else if (status === "rejected") {
+    return <ImageWithTextAlert />;
   }
 
   if (!profile) {
