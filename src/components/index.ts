@@ -31,6 +31,8 @@ import { UpdateCommentModal } from "./UpdateCommentModal";
 import { ViewCommentModal } from "./ViewCommentModal";
 import { ViewPostModal } from "./ViewPostModal";
 import { SingleUserRow } from "./SingleUserRow";
+import { Pagination } from "./Pagination";
+import { ImageWithTextAlert } from "./ImageWithTextAlert";
 
 export {
   ThemeColorToggle,
@@ -66,4 +68,6 @@ export {
   ViewCommentModal,
   ViewPostModal,
   SingleUserRow,
+  Pagination,
+  ImageWithTextAlert,
 };
