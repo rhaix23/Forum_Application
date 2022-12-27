@@ -1,43 +1,81 @@
-import { Flex, Image, Stack, Text } from "@mantine/core";
-import { useEffect } from "react";
+import { Stack } from "@mantine/core";
+import { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { PreviewPostCard, PostsOptions } from "../components";
+import {
+  PreviewPostCard,
+  PostsOptions,
+  Pagination,
+  ImageWithTextAlert,
+} from "../components";
 import { getSubcategoryPosts } from "../features/post/postThunks";
 import { AppDispatch, RootState } from "../store";
+import {
+  queryOptionsReducer,
+  queryOptionsState,
+} from "../reducers/queryOptionsReducer";
 import nopostsImage from "../assets/noposts.png";
+import { Loader } from "../components/Loader";
 
 const Posts = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const { posts, status } = useSelector((state: RootState) => state.post);
+  const { posts, status, pages } = useSelector(
+    (state: RootState) => state.post
+  );
+  const [queryOptions, setQueryOptions] = useReducer(
+    queryOptionsReducer,
+    queryOptionsState
+  );
+  const postsPerPage = 20;
 
   useEffect(() => {
     if (id) {
-      dispatch(getSubcategoryPosts({ id }));
+      const { time, sort, activePage } = queryOptions;
+      dispatch(
+        getSubcategoryPosts({
+          id,
+          time: time.value,
+          sort: sort.value,
+          page: activePage,
+          limit: postsPerPage,
+        })
+      );
     }
-  }, []);
+  }, [queryOptions]);
 
   const renderPosts =
     posts &&
     posts.map((post) => <PreviewPostCard key={post._id} post={post} />);
 
+  if (status === "rejected") {
+    return <ImageWithTextAlert />;
+  }
+
   return (
-    <>
-      <PostsOptions />
+    <article>
+      <PostsOptions
+        queryOptions={queryOptions}
+        setQueryOptions={setQueryOptions}
+      />
+
       {posts.length === 0 && status !== "pending" ? (
-        <Flex direction="column" justify="center" align="center">
-          <div style={{ width: 400, marginLeft: "auto", marginRight: "auto" }}>
-            <Image src={nopostsImage} radius="md" />
-          </div>
-          <Text size={20}>
-            There are no posts in this subcategory. Be the first to create one!
-          </Text>
-        </Flex>
+        <ImageWithTextAlert
+          image={nopostsImage}
+          text="There are no posts in this subcategory. Be the first to create one!"
+        />
       ) : (
-        <Stack mb={64}>{renderPosts}</Stack>
+        <Stack>{renderPosts}</Stack>
       )}
-    </>
+
+      {pages > 1 && (
+        <Pagination
+          page={queryOptions.activePage}
+          totalPages={pages}
+          handleClick={setQueryOptions}
+        />
+      )}
+    </article>
   );
 };
 

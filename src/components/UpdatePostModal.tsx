@@ -45,7 +45,7 @@ export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
         title,
         body,
         subcategoryId: subcategoryFound._id,
-        lockPost: isLocked,
+        isLocked,
       })
     );
     setOpened(false);

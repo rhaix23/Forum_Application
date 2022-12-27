@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Status } from "../../types/app.types";
+import { SortOptions, Status } from "../../types/app.types";
 import { IPost } from "../../types/post.types";
 import {
   createPost,
@@ -22,6 +22,9 @@ interface IPostSliceState {
   post: IPost | null;
   error: string;
   status: Status;
+  sort: SortOptions;
+  count: number;
+  pages: number;
 }
 
 const initialState: IPostSliceState = {
@@ -30,12 +33,19 @@ const initialState: IPostSliceState = {
   post: null,
   error: "",
   status: "idle",
+  sort: "-createdAt",
+  count: 1,
+  pages: 1,
 };
 
 const postSlice = createSlice({
   name: "post",
   initialState,
-  reducers: {},
+  reducers: {
+    setSort: (state, action) => {
+      state.sort = action.payload.sort;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getPosts.pending, (state) => {
       state.status = "pending";
@@ -44,18 +54,22 @@ const postSlice = createSlice({
       state.posts = action.payload.posts;
       state.status = "resolved";
     });
-    builder.addCase(getPosts.rejected, (state) => {
+    builder.addCase(getPosts.rejected, (state, action) => {
       state.status = "rejected";
+      action.payload && (state.error = action.payload);
     });
     builder.addCase(getSubcategoryPosts.pending, (state) => {
       state.status = "pending";
     });
     builder.addCase(getSubcategoryPosts.fulfilled, (state, action) => {
       state.posts = action.payload.posts;
+      state.count = action.payload.count;
+      state.pages = action.payload.pages;
       state.status = "resolved";
     });
-    builder.addCase(getSubcategoryPosts.rejected, (state) => {
+    builder.addCase(getSubcategoryPosts.rejected, (state, action) => {
       state.status = "rejected";
+      action.payload && (state.error = action.payload);
     });
     builder.addCase(getSinglePost.pending, (state) => {
       state.status = "pending";
@@ -76,8 +90,9 @@ const postSlice = createSlice({
         return post;
       });
     });
-    builder.addCase(getSinglePost.rejected, (state) => {
+    builder.addCase(getSinglePost.rejected, (state, action) => {
       state.status = "rejected";
+      action.payload && (state.error = action.payload);
     });
     builder.addCase(createPost.pending, (state) => {
       state.status = "pending";
@@ -95,7 +110,6 @@ const postSlice = createSlice({
     });
     builder.addCase(editPost.fulfilled, (state, action) => {
       const updatedPost = action.payload.post;
-      console.log(updatedPost);
       state.post = updatedPost;
       state.posts = state.posts.map((post) => {
         if (post._id === updatedPost._id) {
@@ -180,6 +194,6 @@ const postSlice = createSlice({
   },
 });
 
-export const {} = postSlice.actions;
+export const { setSort } = postSlice.actions;
 
 export default postSlice.reducer;

@@ -18,7 +18,6 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RichTextContent, RichTextEditor } from ".";
 import {
-  deletePost,
   deletePostRate,
   editPost,
   ratePost,
@@ -30,7 +29,6 @@ import { IPost } from "../types/post.types";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Loader } from "./Loader";
 dayjs.extend(relativeTime);
 
 const useStyles = createStyles((theme) => ({
@@ -58,8 +56,6 @@ const PostCard = ({ post }: IProps) => {
   const { user } = useSelector((state: RootState) => state.user);
   const { status, error } = useSelector((state: RootState) => state.post);
 
-  console.log(post);
-
   useEffect(() => {
     setTitle(post.title);
     setBody(post.body);
@@ -85,7 +81,7 @@ const PostCard = ({ post }: IProps) => {
           title,
           body,
           subcategoryId: post.subcategory._id,
-          lockPost: post.isLocked,
+          isLocked: post.isLocked,
         })
       );
       setIsEditing(false);
@@ -245,14 +241,6 @@ const PostCard = ({ post }: IProps) => {
         </Flex>
       </Box>
     );
-  }
-
-  if (status === "pending") {
-    return <Loader />;
-  }
-
-  if (status === "rejected") {
-    toast.error(error);
   }
 
   return (

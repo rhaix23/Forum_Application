@@ -50,13 +50,13 @@ const PreviewPostCard = ({ post }: IProps) => {
 
   const userLiked = useMemo(() => {
     if (user) {
-      return post.likes.find((like) => like.user === user._id);
+      return post?.likes.find((like) => like.user === user._id);
     }
   }, [post, user]);
 
   const userDisliked = useMemo(() => {
     if (user) {
-      return post.dislikes.find((dislike) => dislike.user === user._id);
+      return post?.dislikes.find((dislike) => dislike.user === user._id);
     }
   }, [post, user]);
 

@@ -1,10 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { IPost } from "../../types/post.types";
+import { TimeFilterOptions, SortOptions } from "../../types/app.types";
+import { IAdminPagePost, IPost } from "../../types/post.types";
 import { api } from "../../utils/axios";
 
+// @desc    Get all posts
 export const getPosts = createAsyncThunk<
-  { posts: IPost[] },
+  { posts: IAdminPagePost[] },
   void,
   { rejectValue: string }
 >("post/getPosts", async (_, thunkAPI) => {
@@ -21,20 +23,36 @@ export const getPosts = createAsyncThunk<
 
 // @desc    Get posts for a subcategory
 export const getSubcategoryPosts = createAsyncThunk<
-  { posts: IPost[] },
-  { id: string },
+  { posts: IPost[]; count: number; pages: number },
+  {
+    id: string;
+    sort?: SortOptions;
+    time?: TimeFilterOptions;
+    page?: number;
+    limit?: number;
+  },
   { rejectValue: string }
->("post/getSubcategoryPosts", async ({ id }, thunkAPI) => {
-  try {
-    const response = await api.get(`/post/subcategory/${id}`);
-    return response.data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+>(
+  "post/getSubcategoryPosts",
+  async (
+    { id, sort = "-createdAt", time = "day", page = 1, limit = 20 },
+    thunkAPI
+  ) => {
+    try {
+      const response = await api.get(
+        `/post/subcategory/${id}?sort=${sort}&time=${
+          time === "all" ? "" : time
+        }&page=${page}&limit=${limit}`
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.msg);
+      }
+      return thunkAPI.rejectWithValue("Something went wrong");
     }
-    return thunkAPI.rejectWithValue("Something went wrong");
   }
-});
+);
 
 // @desc    Get a single post
 export const getSinglePost = createAsyncThunk<
@@ -83,7 +101,7 @@ export const editPost = createAsyncThunk<
     title: string;
     body: string;
     subcategoryId: string;
-    lockPost: boolean;
+    isLocked: boolean;
   },
   { rejectValue: string }
 >("post/editPost", async (post, thunkAPI) => {
@@ -121,7 +139,6 @@ export const removePost = createAsyncThunk<
   { id: string },
   { rejectValue: string }
 >("post/removePost", async ({ id }, thunkAPI) => {
-  console.log(id);
   try {
     const response = await api.patch(`/post/remove/${id}`);
     return response.data;
