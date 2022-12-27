@@ -1,4 +1,11 @@
-import { Button, Group, Modal, NativeSelect, TextInput } from "@mantine/core";
+import {
+  Button,
+  Checkbox,
+  Group,
+  Modal,
+  NativeSelect,
+  TextInput,
+} from "@mantine/core";
 import { Dispatch, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -22,6 +29,9 @@ export const UpdateSubcategoryModal = ({
   const [name, setName] = useState(subcategory.name);
   const [description, setDescription] = useState(subcategory.description);
   const [category, setCategory] = useState(subcategory.category.name);
+  const [allowUsersToPost, setAllowUsersToPost] = useState(
+    subcategory.allowUsersToPost
+  );
 
   const handleSubmit = () => {
     // implement this
@@ -38,6 +48,7 @@ export const UpdateSubcategoryModal = ({
         name,
         description,
         categoryId: categoryFound._id,
+        allowUsersToPost: subcategory.allowUsersToPost,
       })
     );
 
@@ -81,6 +92,12 @@ export const UpdateSubcategoryModal = ({
         value={category}
         onChange={(e) => setCategory(e.currentTarget.value)}
         withAsterisk
+      />
+      <Checkbox
+        label="Allow users to post"
+        checked={allowUsersToPost}
+        onChange={(event) => setAllowUsersToPost(event.currentTarget.checked)}
+        mt={16}
       />
       <Group position="right" mt={16}>
         <Button size="xs" color="gray" onClick={() => setOpened(false)}>

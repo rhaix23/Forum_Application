@@ -21,10 +21,6 @@ export const AdminSubcategory = () => {
     dispatch(getSubcategories());
   }, []);
 
-  const renderRows = subcategories.map((subcategory) => (
-    <SingleSubcategoryRow key={subcategory._id} subcategory={subcategory} />
-  ));
-
   return (
     <Box>
       <CreateSubcategoryModal
@@ -55,7 +51,14 @@ export const AdminSubcategory = () => {
             <th style={{ textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
-        <tbody>{renderRows}</tbody>
+        <tbody>
+          {subcategories.map((subcategory) => (
+            <SingleSubcategoryRow
+              key={subcategory._id}
+              subcategory={subcategory}
+            />
+          ))}
+        </tbody>
       </Table>
     </Box>
   );
