@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Status } from "../../types/app.types";
-import { IUser, IUserInformation } from "../../types/user.types";
+import { IUser } from "../../types/user.types";
 import {
   changePassword,
   getMe,
@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 interface IUserSliceState {
   users: IUser[];
   user: IUser | null;
-  profile: IUserInformation | null;
+  profile: IUser | null;
   status: Status;
   error: string;
 }

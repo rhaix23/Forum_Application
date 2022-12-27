@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { IUser, IUserInformation } from "../../types/user.types";
+import { IUser } from "../../types/user.types";
 import { api } from "../../utils/axios";
 
 // @desc    Get all users
@@ -22,7 +22,7 @@ export const getUsers = createAsyncThunk<
 
 // @desc    Get single user
 export const getSingleUser = createAsyncThunk<
-  { user: IUserInformation },
+  { user: IUser },
   { userId: string },
   { rejectValue: string }
 >("users/getSingleUser", async ({ userId }, thunkAPI) => {
@@ -123,8 +123,8 @@ export const changePassword = createAsyncThunk<
 
 // @desc    Update user
 export const updateUser = createAsyncThunk<
-  { user: IUserInformation },
-  { user: IUserInformation },
+  { user: IUser },
+  { user: IUser },
   { rejectValue: string }
 >("users/updateUser", async ({ user }, thunkAPI) => {
   try {
