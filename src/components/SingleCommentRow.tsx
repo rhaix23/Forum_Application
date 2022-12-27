@@ -7,6 +7,8 @@ import { ConfirmationModal } from "./ConfirmationModal";
 import dayjs from "dayjs";
 import { UpdateCommentModal } from "./UpdateCommentModal";
 import { ViewCommentModal } from "./ViewCommentModal";
+import { useAppDispatch } from "../store";
+import { deleteComment } from "../features/comment/commentThunks";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -23,6 +25,7 @@ interface IProps {
 }
 
 export const SingleCommentRow = ({ comment }: IProps) => {
+  const dispatch = useAppDispatch();
   const { classes } = useStyles();
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -43,7 +46,13 @@ export const SingleCommentRow = ({ comment }: IProps) => {
       <ConfirmationModal
         opened={openDeleteModal}
         setOpened={setOpenDeleteModal}
-        handleClick={() => console.log("hello")}
+        handleClick={() =>
+          dispatch(
+            deleteComment({
+              commentId: comment._id,
+            })
+          )
+        }
       />
       <tr>
         <td>

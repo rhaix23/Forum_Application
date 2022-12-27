@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
+import { SortOptions, TimeFilterOptions } from "../../types/app.types";
 import { IComment } from "../../types/comment.types";
 import { api } from "../../utils/axios";
 
@@ -22,30 +23,34 @@ export const getComments = createAsyncThunk<
 
 // @desc    Get all comments for a post
 export const getPostComments = createAsyncThunk<
-  { comments: IComment[] },
-  { id: string },
+  { comments: IComment[]; count: number; pages: number },
+  { id: string; sort?: SortOptions; page?: number; limit?: number },
   { rejectValue: string }
->("comment/getPostComments", async ({ id }, thunkAPI) => {
-  try {
-    const response = await api.get(`/comment/post/${id}`);
-    return response.data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+>(
+  "comment/getPostComments",
+  async ({ id, sort = "-createdAt", page = 1, limit = 20 }, thunkAPI) => {
+    try {
+      const response = await api.get(
+        `/comment/post/${id}?sort=${sort}&page=${page}&limit=${limit}`
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.msg);
+      }
+      return thunkAPI.rejectWithValue("Something went wrong");
     }
-    return thunkAPI.rejectWithValue("Something went wrong");
   }
-});
+);
 
 // @desc    Create a comment
 export const createComment = createAsyncThunk<
-  { comments: IComment[] },
+  { comment: IComment },
   { body: string; postId: string },
   { rejectValue: string }
 >("comment/createComment", async (comment, thunkAPI) => {
   try {
     const response = await api.post(`/comment`, comment);
-    thunkAPI.dispatch(getPostComments({ id: comment.postId }));
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

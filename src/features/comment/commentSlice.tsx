@@ -19,6 +19,8 @@ interface ICommentSliceState {
   userComments: IComment[];
   status: Status;
   error: string;
+  count: number;
+  pages: number;
 }
 
 const initialState: ICommentSliceState = {
@@ -26,6 +28,8 @@ const initialState: ICommentSliceState = {
   userComments: [],
   status: "idle",
   error: "",
+  count: 0,
+  pages: 0,
 };
 
 const commentSlice = createSlice({
@@ -41,31 +45,33 @@ const commentSlice = createSlice({
       state.status = "resolved";
     });
     builder.addCase(getComments.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
+      state.status = "rejected";
     });
     builder.addCase(getPostComments.pending, (state) => {
       state.status = "pending";
     });
     builder.addCase(getPostComments.fulfilled, (state, action) => {
       state.comments = action.payload.comments;
+      state.count = action.payload.count;
+      state.pages = action.payload.pages;
       state.status = "resolved";
     });
     builder.addCase(getPostComments.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
+      state.status = "rejected";
     });
     builder.addCase(createComment.pending, (state) => {
       state.status = "pending";
     });
     builder.addCase(createComment.fulfilled, (state, action) => {
-      state.comments = action.payload.comments;
+      state.comments.unshift(action.payload.comment);
       state.status = "resolved";
       toast.success("Comment has been created");
     });
     builder.addCase(createComment.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
+      state.status = "rejected";
       toast.error(action.payload);
     });
     builder.addCase(deleteComment.pending, (state) => {
@@ -76,10 +82,11 @@ const commentSlice = createSlice({
         (comment) => comment._id !== action.payload.id
       );
       state.status = "resolved";
+      toast.success("Comment has been deleted");
     });
     builder.addCase(deleteComment.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
+      state.status = "rejected";
       toast.error(action.payload);
     });
     builder.addCase(updateComment.pending, (state) => {
@@ -97,16 +104,16 @@ const commentSlice = createSlice({
       toast.success("Comment has been updated");
     });
     builder.addCase(updateComment.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
+      state.status = "rejected";
       toast.error(action.payload);
     });
     builder.addCase(getUserComments.pending, (state) => {
       state.status = "pending";
     });
     builder.addCase(getUserComments.fulfilled, (state, action) => {
-      state.status = "resolved";
       state.userComments = action.payload.comments;
+      state.status = "resolved";
     });
     builder.addCase(getUserComments.rejected, (state, action) => {
       state.status = "rejected";

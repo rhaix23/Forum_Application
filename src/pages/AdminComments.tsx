@@ -13,10 +13,6 @@ export const AdminComments = () => {
     dispatch(getComments());
   }, []);
 
-  const renderRows = comments.map((comment) => (
-    <SingleCommentRow key={comment._id} comment={comment} />
-  ));
-
   return (
     <Box>
       <Table
@@ -35,7 +31,11 @@ export const AdminComments = () => {
             <th style={{ textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
-        <tbody>{renderRows}</tbody>
+        <tbody>
+          {comments.map((comment) => (
+            <SingleCommentRow key={comment._id} comment={comment} />
+          ))}
+        </tbody>
       </Table>
     </Box>
   );

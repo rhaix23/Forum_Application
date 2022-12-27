@@ -1,13 +1,11 @@
-import { IPost } from "./post.types";
-import { IUser } from "./user.types";
-
-export type ICommentId = string;
+import { IPostIdAndTitle } from "./post.types";
+import { IUserIdAndUsername } from "./user.types";
 
 export interface IComment {
   _id: string;
   body: string;
-  post: IPost;
-  user: IUser;
+  post: IPostIdAndTitle;
+  user: IUserIdAndUsername;
   createdAt: string;
   updatedAt: string;
 }
