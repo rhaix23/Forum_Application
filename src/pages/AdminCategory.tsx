@@ -16,10 +16,6 @@ export const AdminCategory = () => {
     dispatch(getCategories());
   }, []);
 
-  const renderRows = categories.map((category) => (
-    <SingleCategoryRow key={category._id} category={category} />
-  ));
-
   return (
     <Box>
       <CreateCategoryModal
@@ -49,7 +45,11 @@ export const AdminCategory = () => {
             <th style={{ textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
-        <tbody>{renderRows}</tbody>
+        <tbody>
+          {categories.map((category) => (
+            <SingleCategoryRow key={category._id} category={category} />
+          ))}
+        </tbody>
       </Table>
     </Box>
   );

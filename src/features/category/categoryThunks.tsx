@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { KnownError } from "../../types/app.types";
 import { ICategory, ISubcategory } from "../../types/category.types";
 import { api } from "../../utils/axios";
 
@@ -116,6 +115,7 @@ export const updateSubcategory = createAsyncThunk<
     name: string;
     description: string;
     categoryId: string;
+    allowUsersToPost: boolean;
   },
   { rejectValue: string }
 >("category/updateSubcategory", async (updatedSubcategoryDetails, thunkAPI) => {
