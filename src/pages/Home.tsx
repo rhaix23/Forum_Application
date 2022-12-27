@@ -45,42 +45,42 @@ const Home = () => {
     return <ImageWithTextAlert />;
   }
 
-  const renderCategories = (
-    <Paper mb={64} shadow="xs" withBorder>
-      {status === "resolved" &&
-        categories.map((category) => {
-          return (
-            <Box key={category._id}>
-              <Paper className={classes.category} withBorder shadow="xs">
-                <Text weight="bold" color="white">
-                  {category.name}
-                </Text>
-              </Paper>
-              {category.subcategories.map((subcategory) => (
-                <Paper
-                  key={subcategory._id}
-                  className={classes.subcategory}
-                  sx={{ padding: "1.5rem 2rem" }}
-                  withBorder
-                  shadow="xs"
-                  component={Link}
-                  to={`/${subcategory._id}`}
-                >
-                  <Group>
-                    <Text color="blue.7">{subcategory.name}</Text>
-                  </Group>
-                  <Text size={13} color="gray.6">
-                    {subcategory.description}
+  return (
+    <Box>
+      <Paper mb={64} shadow="xs" withBorder>
+        {status === "resolved" &&
+          categories.map((category) => {
+            return (
+              <Box key={category._id}>
+                <Paper className={classes.category} withBorder shadow="xs">
+                  <Text weight="bold" color="white">
+                    {category.name}
                   </Text>
                 </Paper>
-              ))}
-            </Box>
-          );
-        })}
-    </Paper>
+                {category.subcategories.map((subcategory) => (
+                  <Paper
+                    key={subcategory._id}
+                    className={classes.subcategory}
+                    sx={{ padding: "1.5rem 2rem" }}
+                    withBorder
+                    shadow="xs"
+                    component={Link}
+                    to={`/${subcategory._id}`}
+                  >
+                    <Group>
+                      <Text color="blue.7">{subcategory.name}</Text>
+                    </Group>
+                    <Text size={13} color="gray.6">
+                      {subcategory.description}
+                    </Text>
+                  </Paper>
+                ))}
+              </Box>
+            );
+          })}
+      </Paper>
+    </Box>
   );
-
-  return <Box>{renderCategories}</Box>;
 };
 
 export { Home };

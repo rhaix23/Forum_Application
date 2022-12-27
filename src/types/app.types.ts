@@ -5,3 +5,11 @@ export interface CustomError {
 }
 
 export type KnownError = CustomError | string;
+
+export type SortOptions =
+  | "-createdAt"
+  | "+createdAt"
+  | "-ratingCount"
+  | "+ratingCount";
+
+export type TimeFilterOptions = "day" | "week" | "month" | "year" | "all";

@@ -11,7 +11,6 @@ import { AdminNavbar } from "../components";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { IUser } from "../types/user.types";
 
 export const AdminLayout = () => {
   const theme = useMantineTheme();

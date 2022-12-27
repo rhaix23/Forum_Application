@@ -3,7 +3,7 @@ import { IconAlertCircle, IconChevronLeft } from "@tabler/icons";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { CreateComment, PostComments } from "../components";
+import { CreateComment, ImageWithTextAlert, PostComments } from "../components";
 import { PostCard } from "../components/PostCard";
 import { getSinglePost } from "../features/post/postThunks";
 import { RootState, useAppDispatch } from "../store";
@@ -12,7 +12,7 @@ const SinglePost = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { post } = useSelector((state: RootState) => state.post);
+  const { post, status } = useSelector((state: RootState) => state.post);
   const { user } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
@@ -20,6 +20,10 @@ const SinglePost = () => {
       dispatch(getSinglePost({ id }));
     }
   }, []);
+
+  if (status === "rejected") {
+    return <ImageWithTextAlert />;
+  }
 
   return (
     <section>
@@ -40,11 +44,10 @@ const SinglePost = () => {
       {post?.isLocked ? (
         <Alert
           icon={<IconAlertCircle size={16} />}
-          title="Attention users"
+          title="Notice"
           color="yellow"
         >
           This post has been locked and is no longer available for comments.
-          Thank you for your understanding.
         </Alert>
       ) : user ? (
         <CreateComment />
