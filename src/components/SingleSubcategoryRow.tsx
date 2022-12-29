@@ -3,12 +3,15 @@ import { IconDots, IconPencil, IconTrash } from "@tabler/icons";
 import { useState } from "react";
 import { deleteSubcategory } from "../features/category/categoryThunks";
 import { useAppDispatch } from "../store";
-import { ISubcategory } from "../types/category.types";
+import {
+  IPopulatedSubcategory,
+  ISubcategory,
+} from "../types/subcategory.types";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { UpdateSubcategoryModal } from "./UpdateSubcategoryModal";
 
 interface IProps {
-  subcategory: ISubcategory;
+  subcategory: IPopulatedSubcategory;
 }
 
 export const SingleSubcategoryRow = ({ subcategory }: IProps) => {

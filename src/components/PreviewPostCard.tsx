@@ -28,6 +28,7 @@ import {
 } from "../features/post/postThunks";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Loader } from "./Loader";
 dayjs.extend(relativeTime);
 
 const useStyles = createStyles((theme) => ({
@@ -49,14 +50,14 @@ const PreviewPostCard = ({ post }: IProps) => {
   const { user } = useSelector((state: RootState) => state.user);
 
   const userLiked = useMemo(() => {
-    if (user) {
-      return post?.likes.find((like) => like.user === user._id);
+    if (user && post.likes) {
+      return post.likes.find((like) => like.user === user._id);
     }
   }, [post, user]);
 
   const userDisliked = useMemo(() => {
-    if (user) {
-      return post?.dislikes.find((dislike) => dislike.user === user._id);
+    if (user && post.likes) {
+      return post.dislikes.find((dislike) => dislike.user === user._id);
     }
   }, [post, user]);
 
@@ -87,6 +88,10 @@ const PreviewPostCard = ({ post }: IProps) => {
     }
   };
 
+  if (!post.likes || !post.dislikes) {
+    return <Loader />;
+  }
+
   return (
     <Paper
       key={post._id}
@@ -104,7 +109,9 @@ const PreviewPostCard = ({ post }: IProps) => {
           <IconArrowUp size={14} />
         </ActionIcon>
         <Text align="center" size={14}>
-          {post.likes.length - post.dislikes.length <= 0
+          {post.likes &&
+          post.dislikes &&
+          post.likes.length - post.dislikes.length <= 0
             ? 0
             : post.likes.length - post.dislikes.length}
         </Text>

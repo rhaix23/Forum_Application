@@ -68,7 +68,6 @@ export const updateComment = createAsyncThunk<
 >("comment/updateComment", async ({ commentId, body, postId }, thunkAPI) => {
   try {
     const response = await api.patch(`/comment/${commentId}`, { body });
-    thunkAPI.dispatch(getPostComments({ id: postId }));
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

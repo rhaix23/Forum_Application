@@ -5,7 +5,7 @@ import { SingleCommentRow } from "../components";
 import { getComments } from "../features/comment/commentThunks";
 import { RootState, useAppDispatch } from "../store";
 
-export const AdminComments = () => {
+const AdminComments = () => {
   const dispatch = useAppDispatch();
   const { comments } = useSelector((state: RootState) => state.comment);
 
@@ -40,3 +40,5 @@ export const AdminComments = () => {
     </Box>
   );
 };
+
+export default AdminComments;

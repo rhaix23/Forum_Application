@@ -11,10 +11,10 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { updateSubcategory } from "../features/category/categoryThunks";
 import { RootState, useAppDispatch } from "../store";
-import { ISubcategory } from "../types/category.types";
+import { IPopulatedSubcategory } from "../types/subcategory.types";
 
 interface IProps {
-  subcategory: ISubcategory;
+  subcategory: IPopulatedSubcategory;
   opened: boolean;
   setOpened: Dispatch<React.SetStateAction<boolean>>;
 }

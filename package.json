@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^5.8.4",
+    "@mantine/dates": "^5.9.5",
     "@mantine/hooks": "^5.8.4",
     "@mantine/tiptap": "^5.8.4",
     "@reduxjs/toolkit": "^1.9.0",

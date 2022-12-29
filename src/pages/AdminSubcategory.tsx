@@ -9,7 +9,7 @@ import {
 } from "../features/category/categoryThunks";
 import { RootState, useAppDispatch } from "../store";
 
-export const AdminSubcategory = () => {
+const AdminSubcategory = () => {
   const dispatch = useAppDispatch();
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const { subcategories, error } = useSelector(
@@ -63,3 +63,5 @@ export const AdminSubcategory = () => {
     </Box>
   );
 };
+
+export default AdminSubcategory;

@@ -44,15 +44,15 @@ export const ProfileMenuUserAccount = () => {
   }
 
   const [userInfo, setUserInfo] = useState({
-    name: profile ? profile.name : "",
-    position: profile ? profile.position : "",
-    workingAt: profile ? profile.workingAt : "",
-    github: profile ? profile.github : "",
-    linkedin: profile ? profile.linkedin : "",
-    email: profile ? profile.email : "",
+    name: profile.name || "",
+    position: profile.position || "",
+    workingAt: profile.workingAt || "",
+    github: profile.github || "",
+    linkedin: profile.linkedin || "",
+    email: profile.email || "",
   });
 
-  const [about, setAbout] = useState(profile.about);
+  const [about, setAbout] = useState(profile.about || "");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { ICategory } from "../types/category.types";
 import { IComment } from "../types/comment.types";
-import { IPost } from "../types/post.types";
+import { IAdminPagePost, IPost } from "../types/post.types";
 import { RichTextContent } from "./RichTextContent";
 
 interface IProps {
-  post: IPost;
+  post: IAdminPagePost;
   opened: boolean;
   setOpened: Dispatch<React.SetStateAction<boolean>>;
 }

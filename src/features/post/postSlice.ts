@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { SortOptions, Status } from "../../types/app.types";
-import { IPost } from "../../types/post.types";
+import { IAdminPagePost, IPost } from "../../types/post.types";
 import {
   createPost,
   deletePost,
@@ -17,7 +17,7 @@ import {
 import { toast } from "react-toastify";
 
 interface IPostSliceState {
-  posts: IPost[];
+  posts: IPost[] | IAdminPagePost[];
   userPosts: IPost[];
   post: IPost | null;
   error: string;
@@ -52,6 +52,8 @@ const postSlice = createSlice({
     });
     builder.addCase(getPosts.fulfilled, (state, action) => {
       state.posts = action.payload.posts;
+      state.count = action.payload.count;
+      state.pages = action.payload.pages;
       state.status = "resolved";
     });
     builder.addCase(getPosts.rejected, (state, action) => {
@@ -104,6 +106,7 @@ const postSlice = createSlice({
     builder.addCase(createPost.rejected, (state, action) => {
       state.status = "rejected";
       action.payload && (state.error = action.payload);
+      toast.error(action.payload);
     });
     builder.addCase(editPost.pending, (state) => {
       state.status = "pending";
@@ -145,7 +148,6 @@ const postSlice = createSlice({
     builder.addCase(ratePost.rejected, (state, action) => {
       state.status = "rejected";
       action.payload && (state.error = action.payload);
-      toast.error(action.payload);
     });
     builder.addCase(updatePostRate.pending, (state) => {
       state.status = "pending";
@@ -156,7 +158,6 @@ const postSlice = createSlice({
     builder.addCase(updatePostRate.rejected, (state, action) => {
       state.status = "rejected";
       action.payload && (state.error = action.payload);
-      toast.error(action.payload);
     });
     builder.addCase(deletePostRate.pending, (state) => {
       state.status = "pending";
@@ -167,7 +168,6 @@ const postSlice = createSlice({
     builder.addCase(deletePostRate.rejected, (state, action) => {
       state.status = "rejected";
       action.payload && (state.error = action.payload);
-      toast.error(action.payload);
     });
     builder.addCase(getUserPosts.pending, (state) => {
       state.status = "pending";

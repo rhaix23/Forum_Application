@@ -13,11 +13,11 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { editPost } from "../features/post/postThunks";
 import { RootState, useAppDispatch } from "../store";
-import { IPost } from "../types/post.types";
+import { IAdminPagePost, IPost } from "../types/post.types";
 import { RichTextEditor } from "./RichTextEditor";
 
 interface IProps {
-  post: IPost;
+  post: IAdminPagePost;
   opened: boolean;
   setOpened: Dispatch<React.SetStateAction<boolean>>;
 }

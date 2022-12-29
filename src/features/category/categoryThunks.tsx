@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { ICategory, ISubcategory } from "../../types/category.types";
+import { ICategory } from "../../types/category.types";
+import { ISubcategory } from "../../types/subcategory.types";
 import { api } from "../../utils/axios";
 
 // @desc    Fetch all categories

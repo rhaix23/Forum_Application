@@ -15,7 +15,7 @@ import {
   queryOptionsState,
 } from "../reducers/queryOptionsReducer";
 import nopostsImage from "../assets/noposts.png";
-import { Loader } from "../components/Loader";
+import { IPost, QueryOptionTypes } from "../types/post.types";
 
 const Posts = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -46,11 +46,9 @@ const Posts = () => {
 
   const renderPosts =
     posts &&
-    posts.map((post) => <PreviewPostCard key={post._id} post={post} />);
-
-  if (status === "rejected") {
-    return <ImageWithTextAlert />;
-  }
+    posts.map((post) => (
+      <PreviewPostCard key={post._id} post={post as IPost} />
+    ));
 
   return (
     <article>
@@ -73,10 +71,11 @@ const Posts = () => {
           page={queryOptions.activePage}
           totalPages={pages}
           handleClick={setQueryOptions}
+          type={QueryOptionTypes.ACTIVEPAGE}
         />
       )}
     </article>
   );
 };
 
-export { Posts };
+export default Posts;

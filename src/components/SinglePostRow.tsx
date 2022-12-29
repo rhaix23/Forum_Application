@@ -2,7 +2,7 @@ import { ActionIcon, createStyles, Flex, Menu, Text } from "@mantine/core";
 import { IconDots, IconEye, IconPencil, IconTrash } from "@tabler/icons";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { IPost } from "../types/post.types";
+import { IAdminPagePost, IPost } from "../types/post.types";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { UpdatePostModal } from "./UpdatePostModal";
 import { ViewPostModal } from "./ViewPostModal";
@@ -21,7 +21,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface IProps {
-  post: IPost;
+  post: IAdminPagePost;
 }
 
 export const SinglePostRow = ({ post }: IProps) => {

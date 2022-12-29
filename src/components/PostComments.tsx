@@ -92,6 +92,7 @@ export const PostComments = () => {
           page={queryOptions.activePage}
           totalPages={pages}
           handleClick={setQueryOptions}
+          type={QueryOptionTypes.ACTIVEPAGE}
         />
       )}
     </section>

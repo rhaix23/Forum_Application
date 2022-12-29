@@ -5,7 +5,7 @@ import { SingleUserRow } from "../components";
 import { getUsers } from "../features/user/userThunks";
 import { RootState, useAppDispatch } from "../store";
 
-export const AdminUsers = () => {
+const AdminUsers = () => {
   const dispatch = useAppDispatch();
   const { users } = useSelector((state: RootState) => state.user);
 
@@ -41,3 +41,5 @@ export const AdminUsers = () => {
     </Box>
   );
 };
+
+export default AdminUsers;

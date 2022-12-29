@@ -7,7 +7,7 @@ import { CreateCategoryModal } from "../components";
 import { getCategories } from "../features/category/categoryThunks";
 import { RootState, useAppDispatch } from "../store";
 
-export const AdminCategory = () => {
+const AdminCategory = () => {
   const dispatch = useAppDispatch();
   const { categories } = useSelector((state: RootState) => state.category);
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -54,3 +54,5 @@ export const AdminCategory = () => {
     </Box>
   );
 };
+
+export default AdminCategory;

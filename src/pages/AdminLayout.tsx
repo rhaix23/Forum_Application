@@ -12,7 +12,7 @@ import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 
-export const AdminLayout = () => {
+const AdminLayout = () => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
@@ -62,3 +62,5 @@ export const AdminLayout = () => {
     </AppShell>
   );
 };
+
+export default AdminLayout;
