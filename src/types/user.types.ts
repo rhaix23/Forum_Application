@@ -1,14 +1,13 @@
 export type UserRoles = "user" | "admin";
 
+export type UserId = string;
+
 export interface IUserIdAndUsername {
-  _id: string;
+  _id: UserId;
   username: string;
 }
 
-/* Interface that defines a user */
-export interface IUser {
-  _id: string;
-  username: string;
+export interface IUser extends IUserIdAndUsername {
   role: UserRoles;
   isDisabled: boolean;
   createdAt: Date;

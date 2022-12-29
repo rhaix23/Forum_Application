@@ -1,25 +1,12 @@
-export interface ICategory {
-  _id: string;
+import { ISubcategory } from "./subcategory.types";
+
+export type CategoryId = string;
+
+export interface ICategoryIdAndName {
+  _id: CategoryId;
   name: string;
-  subcategories: {
-    _id: string;
-    name: string;
-    description: string;
-  }[];
 }
 
-export interface ISubcategory {
-  _id: string;
-  name: string;
-  description: string;
-  allowUsersToPost: boolean;
-  category: {
-    _id: string;
-    name: string;
-  };
-}
-
-export interface ISubcategoryIdAndName {
-  _id: string;
-  name: string;
+export interface ICategory extends ICategoryIdAndName {
+  subcategories: ISubcategory[];
 }

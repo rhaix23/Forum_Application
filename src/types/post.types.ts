@@ -6,7 +6,6 @@ export interface IPostIdAndTitle {
   title: string;
 }
 
-/* Defines the type of the Post object */
 export interface IPost {
   _id: string;
   title: string;
@@ -40,26 +39,25 @@ export interface IAdminPagePost {
   };
 }
 
-/* Defines the type of the useReducer state
- * in the Posts page */
 export interface IQueryOptionsState {
   sort: { text: string; value: SortOptions };
   time: { text: string; value: TimeFilterOptions };
+  search: string;
   activePage: number;
 }
 
-/* Defines the type of the useReducer action types */
 export enum QueryOptionTypes {
   SORT = "SORT",
   FILTERBYTIME = "FILTERBYTIME",
   ACTIVEPAGE = "ACTIVEPAGE",
+  SEARCH = "SEARCH",
 }
 
-/* Defines the type of the useReducer action */
 export interface IQueryOptionsAction {
   type: QueryOptionTypes;
   payload:
     | { text: string; value: SortOptions }
     | { text: string; value: TimeFilterOptions }
+    | string
     | number;
 }
