@@ -1,17 +1,24 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
+import dayjs from "dayjs";
+import { IQueryState } from "../../pages/AdminPosts";
 import { TimeFilterOptions, SortOptions } from "../../types/app.types";
 import { IAdminPagePost, IPost } from "../../types/post.types";
 import { api } from "../../utils/axios";
 
 // @desc    Get all posts
 export const getPosts = createAsyncThunk<
-  { posts: IAdminPagePost[] },
-  void,
+  { posts: IAdminPagePost[]; count: number; pages: number },
+  IQueryState,
   { rejectValue: string }
->("post/getPosts", async (_, thunkAPI) => {
+>("post/getPosts", async (query, thunkAPI) => {
+  const type = query.searchType.toLowerCase();
+  const value = query.searchValue.toLowerCase();
+  const startDate = dayjs(query.startDate).startOf("day");
+  const endDate = dayjs(query.endDate);
+  let queries = `type=${type}&value=${value}&start=${startDate}&end=${endDate}&page=${query.activePage}`;
   try {
-    const response = await api.get(`/post`);
+    const response = await api.get(`/post?${queries}`);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
