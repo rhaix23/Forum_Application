@@ -14,6 +14,7 @@ export const queryOptionsState: IQueryOptionsState = {
     text: "Today",
     value: "day",
   },
+  search: "",
   activePage: 1,
 };
 
@@ -32,6 +33,8 @@ export const queryOptionsReducer = (
         ...state,
         time: action.payload as { text: string; value: TimeFilterOptions },
       };
+    case QueryOptionTypes.SEARCH:
+      return { ...state, search: action.payload as string };
     case QueryOptionTypes.ACTIVEPAGE:
       return { ...state, activePage: action.payload as number };
     default:
