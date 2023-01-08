@@ -95,20 +95,27 @@ const postSlice = createSlice({
       });
     });
     builder.addCase(getSinglePost.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
+      state.status = "rejected";
     });
     builder.addCase(createPost.pending, (state) => {
       state.status = "pending";
     });
     builder.addCase(createPost.fulfilled, (state, action) => {
+      state.posts = state.posts.map((post) => {
+        if (post._id === action.payload.post._id) {
+          return action.payload.post;
+        }
+        return post;
+      });
       state.post = action.payload.post;
+      toast.success("New post has been created");
       state.status = "resolved";
     });
     builder.addCase(createPost.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
       toast.error(action.payload);
+      state.status = "rejected";
     });
     builder.addCase(editPost.pending, (state) => {
       state.status = "pending";
@@ -122,11 +129,12 @@ const postSlice = createSlice({
         }
         return post;
       });
+      toast.success("Post has been updated");
       state.status = "resolved";
     });
     builder.addCase(editPost.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
+      state.status = "rejected";
     });
     builder.addCase(deletePost.pending, (state) => {
       state.status = "pending";
@@ -135,11 +143,12 @@ const postSlice = createSlice({
       state.posts = state.posts.filter(
         (post) => post._id !== action.payload.id
       );
+      toast.success("Post has been deleted");
       state.status = "resolved";
     });
     builder.addCase(deletePost.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
+      state.status = "rejected";
     });
     builder.addCase(ratePost.pending, (state) => {
       state.status = "pending";
@@ -148,8 +157,8 @@ const postSlice = createSlice({
       state.ratingStatus = "resolved";
     });
     builder.addCase(ratePost.rejected, (state, action) => {
-      state.ratingStatus = "rejected";
       action.payload && (state.error = action.payload);
+      state.ratingStatus = "rejected";
     });
     builder.addCase(updatePostRate.pending, (state) => {
       state.ratingStatus = "pending";
@@ -168,8 +177,8 @@ const postSlice = createSlice({
       state.ratingStatus = "resolved";
     });
     builder.addCase(deletePostRate.rejected, (state, action) => {
-      state.ratingStatus = "rejected";
       action.payload && (state.error = action.payload);
+      state.ratingStatus = "rejected";
     });
     builder.addCase(getUserPosts.pending, (state) => {
       state.status = "pending";

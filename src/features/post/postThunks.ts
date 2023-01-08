@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
-import { ISort } from "../../reducers/adminPostsQueryReducer";
+import { IQueryState, ISort } from "../../reducers/adminPostsQueryReducer";
 import { RootState } from "../../store";
 import { TimeFilterOptions, SortOptions } from "../../types/app.types";
 import { IAdminPagePost, IPost } from "../../types/post.types";
@@ -61,35 +61,41 @@ export const getPosts = createAsyncThunk<
 // @access  Public
 export const getSubcategoryPosts = createAsyncThunk<
   { posts: IPost[]; count: number; pages: number },
-  {
-    id: string;
-    sort?: SortOptions;
-    time?: TimeFilterOptions;
-    page?: number;
-    limit?: number;
-  },
+  { id: string; query: IQueryState },
   { rejectValue: string }
->(
-  "post/getSubcategoryPosts",
-  async (
-    { id, sort = "-createdAt", time = "day", page = 1, limit = 20 },
-    thunkAPI
-  ) => {
-    try {
-      const response = await api.get(
-        `/post/subcategory/${id}?sort=${sort}&time=${
-          time === "all" ? "" : time
-        }&page=${page}&limit=${limit}`
-      );
-      return response.data;
-    } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        return thunkAPI.rejectWithValue(error.response.data.msg);
-      }
-      return thunkAPI.rejectWithValue("Something went wrong");
-    }
+>("post/getSubcategoryPosts", async ({ id, query }, thunkAPI) => {
+  const value = query.searchValue.toLowerCase();
+  const startDate = dayjs(query.startDate).startOf("day");
+  const endDate = dayjs(query.endDate);
+  let queries = "";
+  if (query.searchBy) {
+    queries += `searchBy=${query.searchBy}&`;
   }
-);
+  if (value) {
+    queries += `value=${value}&`;
+  }
+  if (startDate && endDate) {
+    queries += `start=${startDate}&end=${endDate}&`;
+  }
+  if (query.activePage) {
+    queries += `page=${query.activePage}&`;
+  }
+  if (query.limit) {
+    queries += `limit=${query.limit}&`;
+  }
+  if (query.sort) {
+    queries += `sort=${query.sort.value}`;
+  }
+  try {
+    const response = await api.get(`/post/subcategory/${id}?${queries}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+    return thunkAPI.rejectWithValue("Something went wrong");
+  }
+});
 
 // @desc    Get a single post
 // @route   GET /api/post/:id
@@ -124,7 +130,6 @@ export const createPost = createAsyncThunk<
 >("post/createPost", async (post, thunkAPI) => {
   try {
     const response = await api.post(`/post`, post);
-    thunkAPI.dispatch(getSubcategoryPosts({ id: post.subcategoryId }));
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

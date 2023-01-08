@@ -40,7 +40,7 @@ export interface IQueryState {
 export const queryState: IQueryState = {
   searchBy: "",
   searchValue: "",
-  startDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
+  startDate: new Date(Date.now() - 7000 * 60 * 60 * 24),
   endDate: new Date(new Date().setHours(23, 59, 59, 999)),
   limit: 10,
   activePage: 1,
