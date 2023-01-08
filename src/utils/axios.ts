@@ -7,8 +7,8 @@ declare module "axios" {
 }
 
 export const api = axios.create({
-  // baseURL: "http://localhost:3000/api",
-  baseURL: "https://forum-application-api.vercel.app/api",
+  baseURL: "http://localhost:3000/api",
+  // baseURL: "https://forum-application-api.vercel.app/api",
   withCredentials: true,
 });
 
@@ -20,10 +20,10 @@ api.interceptors.response.use(
       if (
         error.response!.status === 401 &&
         !prevRequest._retry &&
-        prevRequest.url !== "/users/login"
+        prevRequest.url !== "/user/login"
       ) {
         prevRequest._retry = true;
-        await api.get("/users/refresh");
+        await api.get("/user/refresh");
         return api(prevRequest);
       }
     }

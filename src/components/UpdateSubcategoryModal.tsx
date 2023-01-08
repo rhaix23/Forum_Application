@@ -9,7 +9,7 @@ import {
 import { Dispatch, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { updateSubcategory } from "../features/category/categoryThunks";
+import { updateSubcategory } from "../features/subcategory/subcategoryThunks";
 import { RootState, useAppDispatch } from "../store";
 import { IPopulatedSubcategory } from "../types/subcategory.types";
 
@@ -34,7 +34,6 @@ export const UpdateSubcategoryModal = ({
   );
 
   const handleSubmit = () => {
-    // implement this
     const categoryFound = categories.find((c) => c.name === category);
 
     if (!categoryFound) {
@@ -48,7 +47,7 @@ export const UpdateSubcategoryModal = ({
         name,
         description,
         categoryId: categoryFound._id,
-        allowUsersToPost: subcategory.allowUsersToPost,
+        allowUsersToPost: allowUsersToPost as boolean,
       })
     );
 

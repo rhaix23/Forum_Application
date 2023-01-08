@@ -1,5 +1,6 @@
 import { Button, Group, Modal, Text, TextInput } from "@mantine/core";
 import { Dispatch } from "react";
+import { IModalActions } from "../reducers/modalReducer";
 
 interface IProps {
   opened: boolean;

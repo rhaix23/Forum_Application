@@ -2,7 +2,7 @@ import { Button, Group, Modal, NativeSelect, TextInput } from "@mantine/core";
 import { Dispatch, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { createSubcategory } from "../features/category/categoryThunks";
+import { createSubcategory } from "../features/subcategory/subcategoryThunks";
 import { RootState, useAppDispatch } from "../store";
 
 interface IProps {

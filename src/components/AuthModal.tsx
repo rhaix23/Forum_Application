@@ -8,8 +8,9 @@ import {
   TextInput,
 } from "@mantine/core";
 import { Dispatch, FormEvent, useState } from "react";
+import { useSelector } from "react-redux";
 import { login, register } from "../features/user/userThunks";
-import { useAppDispatch } from "../store";
+import { RootState, useAppDispatch } from "../store";
 
 interface IProps {
   opened: boolean;
@@ -18,6 +19,7 @@ interface IProps {
 
 const AuthModal = ({ opened, setOpened }: IProps) => {
   const dispatch = useAppDispatch();
+  const { status } = useSelector((state: RootState) => state.user);
   const [isNewUser, setIsNewUser] = useState(false);
   const [userInfo, setUserInfo] = useState({
     username: "",
@@ -29,13 +31,13 @@ const AuthModal = ({ opened, setOpened }: IProps) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isNewUser) {
-      dispatch(register(userInfo));
+      await dispatch(register(userInfo));
     } else {
-      dispatch(
+      await dispatch(
         login({ username: userInfo.username, password: userInfo.password })
       );
     }
@@ -49,7 +51,9 @@ const AuthModal = ({ opened, setOpened }: IProps) => {
     <Modal
       centered
       opened={opened}
-      onClose={() => setOpened(false)}
+      onClose={() => {
+        status === "pending" ? null : setOpened(false);
+      }}
       title={isNewUser ? "Create a new account" : "Sign In"}
     >
       <form onSubmit={handleLogin}>
@@ -84,7 +88,13 @@ const AuthModal = ({ opened, setOpened }: IProps) => {
             />
           )}
         </Box>
-        <Button type="submit" size="xs" fullWidth mb={32}>
+        <Button
+          type="submit"
+          size="xs"
+          fullWidth
+          mb={32}
+          loading={status === "pending"}
+        >
           {isNewUser ? "Sign Up" : "Sign In"}
         </Button>
         <Flex justify="center" align="center" direction="column">
@@ -96,6 +106,7 @@ const AuthModal = ({ opened, setOpened }: IProps) => {
             variant="outline"
             size="xs"
             onClick={() => setIsNewUser((state) => !state)}
+            disabled={status === "pending"}
           >
             {isNewUser ? "Sign In" : "Create a new account"}
           </Button>

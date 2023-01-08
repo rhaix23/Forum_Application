@@ -13,7 +13,7 @@ interface IProps {
   variant?: "bars" | "dots";
 }
 
-const LoaderComponent = ({ variant }: IProps) => {
+const LoaderComponent = ({ variant = "dots" }: IProps) => {
   const { classes } = useStyles();
 
   return (

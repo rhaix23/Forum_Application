@@ -25,7 +25,9 @@ interface IProps {
 export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
   const dispatch = useAppDispatch();
   const { status } = useSelector((state: RootState) => state.post);
-  const { subcategories } = useSelector((state: RootState) => state.category);
+  const { subcategories } = useSelector(
+    (state: RootState) => state.subcategory
+  );
   const [title, setTitle] = useState(post.title);
   const [body, setBody] = useState(post.body);
   const [subcategory, setSubcategory] = useState(post.subcategory.name);
