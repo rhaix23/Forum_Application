@@ -16,6 +16,7 @@ import { ChangeEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { updateUser } from "../features/user/userThunks";
 import { RootState, useAppDispatch } from "../store";
+import { CopyButton } from "./CopyButton";
 import { RichTextContent } from "./RichTextContent";
 import { RichTextEditor } from "./RichTextEditor";
 
@@ -80,23 +81,35 @@ export const ProfileMenuUserAccount = () => {
 
   return (
     <Box>
-      {user && user._id === profile._id && (
-        <Group position="right">
-          <Button
-            size="xs"
-            color={isEditing ? "gray" : "yellow"}
-            onClick={() => setIsEditing((state) => !state)}
-            compact
-          >
-            {isEditing ? "Cancel" : "Edit Profile"}
-          </Button>
-          {isEditing && (
-            <Button size="xs" compact onClick={handleSubmit}>
-              Save
+      <Flex
+        justify={user && user.role === "admin" ? "space-between" : "flex-end"}
+        align="center"
+      >
+        {user && user.role === "admin" && (
+          <CopyButton
+            copyValue={profile._id}
+            displayValue={`ID: ${profile._id}`}
+            textColor="gray"
+          />
+        )}
+        {user && user._id === profile._id && (
+          <Group position="right">
+            <Button
+              size="xs"
+              color={isEditing ? "gray" : "yellow"}
+              onClick={() => setIsEditing((state) => !state)}
+              compact
+            >
+              {isEditing ? "Cancel" : "Edit Profile"}
             </Button>
-          )}
-        </Group>
-      )}
+            {isEditing && (
+              <Button size="xs" compact onClick={handleSubmit}>
+                Save
+              </Button>
+            )}
+          </Group>
+        )}
+      </Flex>
       {isEditing ? (
         <>
           <SimpleGrid

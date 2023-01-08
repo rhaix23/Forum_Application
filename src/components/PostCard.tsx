@@ -16,7 +16,7 @@ import { IconArrowUp, IconArrowDown, IconAlertCircle } from "@tabler/icons";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { RichTextContent, RichTextEditor } from ".";
+import { CopyButton, RichTextContent, RichTextEditor } from ".";
 import {
   deletePostRate,
   editPost,
@@ -276,7 +276,16 @@ const PostCard = ({ post }: IProps) => {
       {post.isRemoved ? (
         <Text fs="italic">Post has been removed</Text>
       ) : (
-        <>{content}</>
+        <Box>
+          {content}
+          {user && user.role === "admin" && (
+            <CopyButton
+              copyValue={post._id}
+              displayValue={`ID: ${post._id}`}
+              textColor="gray"
+            />
+          )}
+        </Box>
       )}
     </Paper>
   );

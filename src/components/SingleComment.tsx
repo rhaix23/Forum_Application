@@ -28,6 +28,7 @@ import { RichTextContent } from "./RichTextContent";
 import { RichTextEditor } from "./RichTextEditor";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { CopyButton } from "./CopyButton";
 dayjs.extend(relativeTime);
 
 interface IProps {
@@ -194,6 +195,14 @@ export const SingleComment = ({ comment }: IProps) => {
             </Button>
           </Group>
         </Box>
+      )}
+
+      {user && user.role === "admin" && (
+        <CopyButton
+          copyValue={comment._id}
+          displayValue={`ID: ${comment._id}`}
+          textColor="gray"
+        />
       )}
     </Paper>
   );
