@@ -40,6 +40,7 @@ const AdminCategory = () => {
       >
         <thead>
           <tr>
+            <th style={{ textAlign: "center" }}>ID</th>
             <th style={{ textAlign: "center" }}>Name</th>
             <th style={{ textAlign: "center" }}>Subcategories</th>
             <th style={{ textAlign: "center" }}>Actions</th>

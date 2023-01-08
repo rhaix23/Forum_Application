@@ -1,4 +1,4 @@
-import { ISubcategory } from "./subcategory.types";
+import { ISubcategoryNameAndDescription } from "./subcategory.types";
 
 export type CategoryId = string;
 
@@ -8,5 +8,5 @@ export interface ICategoryIdAndName {
 }
 
 export interface ICategory extends ICategoryIdAndName {
-  subcategories: ISubcategory[];
+  subcategories: ISubcategoryNameAndDescription[];
 }

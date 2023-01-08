@@ -5,6 +5,7 @@ import { deleteCategory } from "../features/category/categoryThunks";
 import { useAppDispatch } from "../store";
 import { ICategory } from "../types/category.types";
 import { ConfirmationModal } from "./ConfirmationModal";
+import { CopyButton } from "./CopyButton";
 import { UpdateCategoryModal } from "./UpdateCategoryModal";
 
 interface IProps {
@@ -34,6 +35,9 @@ export const SingleCategoryRow = ({ category }: IProps) => {
         handleClick={handleDelete}
       />
       <tr>
+        <td>
+          <CopyButton copyValue={category._id} displayValue={category._id} />
+        </td>
         <td>
           <Text>{category.name}</Text>
         </td>
