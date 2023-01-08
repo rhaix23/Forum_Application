@@ -22,6 +22,7 @@ interface IPostSliceState {
   post: IPost | null;
   error: string;
   status: Status;
+  ratingStatus: Status;
   sort: SortOptions;
   count: number;
   pages: number;
@@ -33,6 +34,7 @@ const initialState: IPostSliceState = {
   post: null,
   error: "",
   status: "idle",
+  ratingStatus: "idle",
   sort: "-createdAt",
   count: 1,
   pages: 1,
@@ -143,30 +145,30 @@ const postSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(ratePost.fulfilled, (state) => {
-      state.status = "resolved";
+      state.ratingStatus = "resolved";
     });
     builder.addCase(ratePost.rejected, (state, action) => {
-      state.status = "rejected";
+      state.ratingStatus = "rejected";
       action.payload && (state.error = action.payload);
     });
     builder.addCase(updatePostRate.pending, (state) => {
-      state.status = "pending";
+      state.ratingStatus = "pending";
     });
     builder.addCase(updatePostRate.fulfilled, (state) => {
-      state.status = "resolved";
+      state.ratingStatus = "resolved";
     });
     builder.addCase(updatePostRate.rejected, (state, action) => {
-      state.status = "rejected";
+      state.ratingStatus = "rejected";
       action.payload && (state.error = action.payload);
     });
     builder.addCase(deletePostRate.pending, (state) => {
-      state.status = "pending";
+      state.ratingStatus = "pending";
     });
     builder.addCase(deletePostRate.fulfilled, (state) => {
-      state.status = "resolved";
+      state.ratingStatus = "resolved";
     });
     builder.addCase(deletePostRate.rejected, (state, action) => {
-      state.status = "rejected";
+      state.ratingStatus = "rejected";
       action.payload && (state.error = action.payload);
     });
     builder.addCase(getUserPosts.pending, (state) => {

@@ -6,9 +6,10 @@ import { IAdminPagePost, IPost } from "../types/post.types";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { UpdatePostModal } from "./UpdatePostModal";
 import { ViewPostModal } from "./ViewPostModal";
-import dayjs from "dayjs";
 import { useAppDispatch } from "../store";
 import { deletePost } from "../features/post/postThunks";
+import dayjs from "dayjs";
+import { CopyButton } from "./CopyButton";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -55,6 +56,9 @@ export const SinglePostRow = ({ post }: IProps) => {
       />
       <tr>
         <td>
+          <CopyButton copyValue={post._id} displayValue={post._id} />
+        </td>
+        <td>
           <Text
             component={Link}
             to={`/post/${post._id}`}
@@ -63,16 +67,6 @@ export const SinglePostRow = ({ post }: IProps) => {
             {post.title}
           </Text>
         </td>
-        <td>
-          <Text
-            component={Link}
-            to={`/profile/${post.user._id}`}
-            className={classes.link}
-          >
-            {post.user.username}
-          </Text>
-        </td>
-        <td>{String(post.isLocked)}</td>
         <td>
           <Flex justify="center" align="center">
             <Menu shadow="md">

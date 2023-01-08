@@ -1,24 +1,52 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
-import { IQueryState } from "../../pages/AdminPosts";
+import { ISort } from "../../reducers/adminPostsQueryReducer";
+import { RootState } from "../../store";
 import { TimeFilterOptions, SortOptions } from "../../types/app.types";
 import { IAdminPagePost, IPost } from "../../types/post.types";
 import { api } from "../../utils/axios";
 
 // @desc    Get all posts
+// @route   GET /api/admin/post
+// @access  Private (Admin)
 export const getPosts = createAsyncThunk<
   { posts: IAdminPagePost[]; count: number; pages: number },
-  IQueryState,
+  {
+    activePage: number;
+    searchValue: string;
+    limit: number;
+    startDate: Date;
+    endDate: Date;
+    sort: ISort;
+    searchBy: string;
+  },
   { rejectValue: string }
 >("post/getPosts", async (query, thunkAPI) => {
-  const type = query.searchType.toLowerCase();
   const value = query.searchValue.toLowerCase();
   const startDate = dayjs(query.startDate).startOf("day");
   const endDate = dayjs(query.endDate);
-  let queries = `type=${type}&value=${value}&start=${startDate}&end=${endDate}&page=${query.activePage}`;
+  let url = "";
+  if (query.searchBy) {
+    url += `searchBy=${query.searchBy}&`;
+  }
+  if (value) {
+    url += `value=${value}&`;
+  }
+  if (startDate && endDate) {
+    url += `start=${startDate}&end=${endDate}&`;
+  }
+  if (query.activePage) {
+    url += `page=${query.activePage}&`;
+  }
+  if (query.limit) {
+    url += `limit=${query.limit}&`;
+  }
+  if (query.sort) {
+    url += `sort=${query.sort.value}`;
+  }
   try {
-    const response = await api.get(`/post?${queries}`);
+    const response = await api.get(`/admin/post?${url}`);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -29,6 +57,8 @@ export const getPosts = createAsyncThunk<
 });
 
 // @desc    Get posts for a subcategory
+// @route   GET /api/post/subcategory/:id
+// @access  Public
 export const getSubcategoryPosts = createAsyncThunk<
   { posts: IPost[]; count: number; pages: number },
   {
@@ -62,6 +92,8 @@ export const getSubcategoryPosts = createAsyncThunk<
 );
 
 // @desc    Get a single post
+// @route   GET /api/post/:id
+// @access  Public
 export const getSinglePost = createAsyncThunk<
   { post: IPost },
   { id: string },
@@ -79,6 +111,8 @@ export const getSinglePost = createAsyncThunk<
 });
 
 // @desc    Create a post
+// @route   POST /api/post
+// @access  Private
 export const createPost = createAsyncThunk<
   { post: IPost },
   {
@@ -101,6 +135,8 @@ export const createPost = createAsyncThunk<
 });
 
 // @desc    Edit a post
+// @route   PATCH /api/post/:id
+// @access  Private
 export const editPost = createAsyncThunk<
   { post: IPost },
   {
@@ -110,10 +146,15 @@ export const editPost = createAsyncThunk<
     subcategoryId: string;
     isLocked: boolean;
   },
-  { rejectValue: string }
+  { rejectValue: string; state: RootState }
 >("post/editPost", async (post, thunkAPI) => {
   try {
-    const response = await api.patch(`/post/${post.id}`, post);
+    const user = thunkAPI.getState().user.user;
+    const url =
+      user && user.role === "admin"
+        ? `/admin/post/${post.id}`
+        : `/post/${post.id}`;
+    const response = await api.patch(url, post);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -124,13 +165,15 @@ export const editPost = createAsyncThunk<
 });
 
 // @desc    Delete a post from the database
+// @route   DELETE /api/post/:id
+// @access  Private (Admin)
 export const deletePost = createAsyncThunk<
   { id: string },
   { id: string },
-  { rejectValue: string }
+  { rejectValue: string; state: RootState }
 >("post/deletePost", async ({ id }, thunkAPI) => {
   try {
-    const response = await api.delete(`/post/${id}`);
+    const response = await api.delete(`/admin/post/${id}`);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -141,13 +184,20 @@ export const deletePost = createAsyncThunk<
 });
 
 // @desc    Remove a post
+// @route   PATCH /api/post/remove/:id
+// @access  Private
 export const removePost = createAsyncThunk<
   { post: IPost },
   { id: string },
-  { rejectValue: string }
+  { rejectValue: string; state: RootState }
 >("post/removePost", async ({ id }, thunkAPI) => {
   try {
-    const response = await api.patch(`/post/remove/${id}`);
+    const user = thunkAPI.getState().user.user;
+    const url =
+      user && user.role === "admin"
+        ? `/admin/post/remove/${id}`
+        : `/post/remove/${id}`;
+    const response = await api.patch(url);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -158,6 +208,8 @@ export const removePost = createAsyncThunk<
 });
 
 // @desc    rate a post
+// @route   POST /api/rating
+// @access  Private
 export const ratePost = createAsyncThunk<
   void,
   { value: -1 | 1; postId: string },
@@ -176,6 +228,8 @@ export const ratePost = createAsyncThunk<
 });
 
 // @desc update post rating
+// @route PATCH /api/rating/:id
+// @access Private
 export const updatePostRate = createAsyncThunk<
   void,
   { value: -1 | 1; id: string; postId: string },
@@ -194,6 +248,8 @@ export const updatePostRate = createAsyncThunk<
 });
 
 // @desc    delete post rating
+// @route   DELETE /api/rating/:id
+// @access  Private
 export const deletePostRate = createAsyncThunk<
   void,
   { id: string; postId: string },
@@ -212,6 +268,8 @@ export const deletePostRate = createAsyncThunk<
 });
 
 // @desc    Get all user posts
+// @route   GET /api/post/user/:id
+// @access  Public
 export const getUserPosts = createAsyncThunk<
   { posts: IPost[] },
   { userId: string },

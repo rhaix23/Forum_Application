@@ -29,6 +29,7 @@ export interface IAdminPagePost {
   title: string;
   body: string;
   isLocked: boolean;
+  isRemoved: boolean;
   user: {
     _id: string;
     username: string;
@@ -37,6 +38,8 @@ export interface IAdminPagePost {
     _id: string;
     name: string;
   };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IQueryOptionsState {

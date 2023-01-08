@@ -5,13 +5,13 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getPostComments } from "../features/comment/commentThunks";
 import {
-  queryOptionsReducer,
-  queryOptionsState,
-} from "../reducers/queryOptionsReducer";
+  ISort,
+  queryReducer,
+  queryState,
+  QueryTypes,
+} from "../reducers/adminPostsQueryReducer";
 import { RootState, useAppDispatch } from "../store";
-import { SortOptions } from "../types/app.types";
 import { QueryOptionTypes } from "../types/post.types";
-import { Loader } from "./Loader";
 import { Pagination } from "./Pagination";
 import { SingleComment } from "./SingleComment";
 
@@ -21,17 +21,13 @@ export const PostComments = () => {
   const { comments, pages, status } = useSelector(
     (state: RootState) => state.comment
   );
-  const [queryOptions, setQueryOptions] = useReducer(
-    queryOptionsReducer,
-    queryOptionsState
-  );
-  const commentsPerPage = 20;
+  const [queryOptions, setQueryOptions] = useReducer(queryReducer, queryState);
 
-  const handleSort = (sortText: string, sort: SortOptions) => {
+  const handleSort = (sortText: string, sort: string) => {
     if (id) {
       setQueryOptions({
-        type: QueryOptionTypes.SORT,
-        payload: { text: sortText, value: sort },
+        type: QueryTypes.SORT,
+        payload: { text: sortText, value: sort } as ISort,
       });
     }
   };
@@ -44,7 +40,6 @@ export const PostComments = () => {
           id,
           sort: sort.value,
           page: activePage,
-          limit: commentsPerPage,
         })
       );
     }
@@ -72,7 +67,7 @@ export const PostComments = () => {
                 <Menu.Item onClick={() => handleSort("Newest", "-createdAt")}>
                   Newest
                 </Menu.Item>
-                <Menu.Item onClick={() => handleSort("Oldest", "+createdAt")}>
+                <Menu.Item onClick={() => handleSort("Oldest", "createdAt")}>
                   Oldest
                 </Menu.Item>
               </Menu.Dropdown>

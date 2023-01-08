@@ -5,164 +5,162 @@ import {
   Group,
   NativeSelect,
   Table,
+  Text,
   TextInput,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useSelector } from "react-redux";
 import { Pagination, SinglePostRow } from "../components";
-import { getSubcategories } from "../features/category/categoryThunks";
 import { getPosts } from "../features/post/postThunks";
 import { RootState, useAppDispatch } from "../store";
-import { DateRangePicker, DateRangePickerValue } from "@mantine/dates";
-import dayjs from "dayjs";
-
-export interface IQueryState {
-  searchType: "title" | "creator";
-  searchValue: string;
-  startDate: Date;
-  endDate: Date;
-  activePage: number;
-}
-
-export enum QueryTypes {
-  SEARCH_TYPE = "SEARCH_TYPE",
-  SEARCH_VALUE = "SEARCH_VALUE",
-  START_DATE = "START_DATE",
-  END_DATE = "END_DATE",
-  ACTIVE_PAGE = "ACTIVE_PAGE",
-}
-
-interface IQueryActions {
-  type: QueryTypes;
-  payload: string | Date | number;
-}
-
-const queryState: IQueryState = {
-  searchType: "title",
-  searchValue: "",
-  startDate: new Date(),
-  endDate: new Date(),
-  activePage: 1,
-};
-
-const queryReducer = (state: IQueryState, action: IQueryActions) => {
-  switch (action.type) {
-    case QueryTypes.SEARCH_TYPE:
-      return {
-        ...state,
-        searchType: action.payload as "title" | "creator",
-      };
-    case QueryTypes.SEARCH_VALUE:
-      return {
-        ...state,
-        searchValue: action.payload as string,
-      };
-    case QueryTypes.START_DATE:
-      return {
-        ...state,
-        startDate: action.payload as Date,
-      };
-    case QueryTypes.END_DATE:
-      return {
-        ...state,
-        endDate: action.payload as Date,
-      };
-    case QueryTypes.ACTIVE_PAGE:
-      return {
-        ...state,
-        activePage: action.payload as number,
-      };
-    default:
-      return state;
-  }
-};
+import { DateRangePicker } from "@mantine/dates";
+import { getSubcategories } from "../features/subcategory/subcategoryThunks";
+import {
+  ISort,
+  queryReducer,
+  queryState,
+  QueryTypes,
+} from "../reducers/adminPostsQueryReducer";
+import { toast } from "react-toastify";
 
 const AdminPosts = () => {
   const dispatch = useAppDispatch();
-  const { posts, count, pages } = useSelector((state: RootState) => state.post);
+  const { posts, pages, status } = useSelector(
+    (state: RootState) => state.post
+  );
   const [queryOptions, setQueryOptions] = useReducer(queryReducer, queryState);
+  // const []
 
   useEffect(() => {
     dispatch(getSubcategories());
   }, []);
 
   useEffect(() => {
-    dispatch(
-      getPosts({
-        searchType: queryOptions.searchType,
-        searchValue: queryOptions.searchValue,
-        startDate: queryOptions.startDate,
-        endDate: queryOptions.endDate,
-        activePage: queryOptions.activePage,
-      })
-    );
-  }, [queryOptions.activePage]);
+    dispatch(getPosts({ ...queryOptions }));
+  }, [queryOptions.activePage, queryOptions.limit, queryOptions.sort]);
+
+  const handleGetPosts = () => {
+    if (queryOptions.searchBy === "id") {
+      const regex = /^[a-fA-F0-9]{24}$/;
+      if (!regex.test(queryOptions.searchValue)) {
+        toast.error("Invalid id");
+        return;
+      }
+    }
+    dispatch(getPosts({ ...queryOptions }));
+  };
 
   return (
     <Box>
       <Box>
-        <Flex mb={16} gap={8}>
+        <Flex mb={8} gap={16}>
           <NativeSelect
-            value={queryOptions.searchType}
-            onChange={(e) =>
-              setQueryOptions({
-                type: QueryTypes.SEARCH_TYPE,
-                payload: e.currentTarget.value,
-              })
-            }
+            data={["", "id", "title", "user", "subcategory"]}
+            label="Search by"
             size="xs"
-            data={["Title", "Creator"]}
-          />
-          <TextInput
-            value={queryOptions.searchValue}
-            onChange={(e) =>
+            value={queryOptions.searchBy}
+            onChange={(e) => {
               setQueryOptions({
-                type: QueryTypes.SEARCH_VALUE,
+                type: QueryTypes.SEARCH_BY,
                 payload: e.currentTarget.value,
-              })
-            }
-            placeholder="Enter search term"
+              });
+            }}
+            sx={{ flex: 1 }}
+          />
+          {queryOptions.searchBy !== "" && (
+            <TextInput
+              label={
+                queryOptions.searchBy === "id"
+                  ? "Post ID"
+                  : queryOptions.searchBy === "title"
+                  ? "Post Title"
+                  : queryOptions.searchBy === "subcategory"
+                  ? "Subcategory ID"
+                  : "User ID"
+              }
+              value={queryOptions.searchValue}
+              onChange={(e) =>
+                setQueryOptions({
+                  type: QueryTypes.SEARCH_VALUE,
+                  payload: e.currentTarget.value,
+                })
+              }
+              placeholder={
+                queryOptions.searchBy === "id" ||
+                queryOptions.searchBy === "user" ||
+                queryOptions.searchBy === "subcategory"
+                  ? "e.g., 63af45d41363a41afeb241db"
+                  : queryOptions.searchBy === "title"
+                  ? "Enter post title"
+                  : ""
+              }
+              size="xs"
+              sx={{ flex: 2 }}
+            />
+          )}
+        </Flex>
+        <Flex align="center" mb={16} gap={16}>
+          <DateRangePicker
+            label="Date range"
+            placeholder="Pick a date range"
+            value={[queryOptions.startDate, queryOptions.endDate]}
+            onChange={(e) => {
+              setQueryOptions({
+                type: QueryTypes.START_DATE,
+                payload: e[0] as Date,
+              });
+              setQueryOptions({
+                type: QueryTypes.END_DATE,
+                payload: e[1] as Date,
+              });
+            }}
             size="xs"
             sx={{ flex: 1 }}
           />
+          <NativeSelect
+            data={["Newest", "Oldest", "Most Popular", "Least Popular"]}
+            label="Sort by"
+            size="xs"
+            value={queryOptions.sort.text}
+            onChange={(e) => {
+              const text = e.currentTarget.value;
+              let value = queryOptions.sort.value as string;
+              if (text === "Newest") value = "-createdAt";
+              if (text === "Oldest") value = "createdAt";
+              if (text === "Most Popular") value = "-ratingCount";
+              if (text === "Least Popular") value = "ratingCount";
+              setQueryOptions({
+                type: QueryTypes.SORT,
+                payload: { text, value } as ISort,
+              });
+            }}
+          />
+          <NativeSelect
+            data={["10", "25", "50", "100"]}
+            label="Show rows"
+            size="xs"
+            value={queryOptions.limit}
+            onChange={(e) =>
+              setQueryOptions({
+                type: QueryTypes.LIMIT,
+                payload: e.currentTarget.value,
+              })
+            }
+          />
         </Flex>
-        <DateRangePicker
-          placeholder="Pick a date range"
-          value={[queryOptions.startDate, queryOptions.endDate]}
-          onChange={(e) => {
-            setQueryOptions({
-              type: QueryTypes.START_DATE,
-              payload: e[0] as Date,
-            });
-            setQueryOptions({
-              type: QueryTypes.END_DATE,
-              payload: e[1] as Date,
-            });
-          }}
-          size="xs"
-          mb={16}
-        />
         <Group position="right" mb={16}>
           <Button
-            onClick={() => {
-              dispatch(
-                getPosts({
-                  searchType: queryOptions.searchType,
-                  searchValue: queryOptions.searchValue,
-                  startDate: queryOptions.startDate,
-                  endDate: queryOptions.endDate,
-                  activePage: queryOptions.activePage,
-                })
-              );
-            }}
+            onClick={handleGetPosts}
             size="xs"
             leftIcon={<IconSearch size={14} />}
+            loading={status === "pending"}
           >
             Search
           </Button>
         </Group>
       </Box>
+
       <Table
         verticalSpacing="xs"
         fontSize="xs"
@@ -173,18 +171,22 @@ const AdminPosts = () => {
       >
         <thead>
           <tr>
+            <th style={{ textAlign: "center" }}>ID</th>
             <th style={{ textAlign: "center" }}>Title</th>
-            <th style={{ textAlign: "center" }}>Creator</th>
-            <th style={{ textAlign: "center" }}>Locked</th>
             <th style={{ textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {posts.map((post) => (
-            <SinglePostRow key={post._id} post={post} />
-          ))}
+          {posts.length > 0 &&
+            posts.map((post) => <SinglePostRow key={post._id} post={post} />)}
         </tbody>
       </Table>
+
+      {posts.length === 0 && (
+        <Text align="center" mt={32}>
+          No data matches the specified search term or date range.
+        </Text>
+      )}
 
       <Pagination
         page={queryOptions.activePage}
