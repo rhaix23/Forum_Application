@@ -1,28 +1,27 @@
 import { Stack } from "@mantine/core";
-import React, { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getUserComments } from "../features/comment/commentThunks";
+import { queryReducer, queryState } from "../reducers/adminPostsQueryReducer";
 import { RootState, useAppDispatch } from "../store";
-import { Loader } from "./Loader";
 import { SingleComment } from "./SingleComment";
 
 export const ProfileMenuComments = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams();
-  const { userComments, status } = useSelector(
-    (state: RootState) => state.comment
-  );
+  const { comments, status } = useSelector((state: RootState) => state.comment);
+  const [queryOptions, setQueryOptions] = useReducer(queryReducer, queryState);
 
   useEffect(() => {
     if (id) {
-      dispatch(getUserComments({ userId: id }));
+      dispatch(getUserComments({ userId: id, query: { ...queryOptions } }));
     }
   }, []);
 
   const renderComments =
-    userComments &&
-    userComments.map((comment, index) => (
+    comments &&
+    comments.map((comment, index) => (
       <SingleComment key={comment._id || index} comment={comment} />
     ));
 
