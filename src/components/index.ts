@@ -33,6 +33,9 @@ import { ViewPostModal } from "./ViewPostModal";
 import { SingleUserRow } from "./SingleUserRow";
 import { Pagination } from "./Pagination";
 import { ImageWithTextAlert } from "./ImageWithTextAlert";
+import { CopyButton } from "./CopyButton";
+import { ViewUserModal } from "./ViewUserModal";
+import { UpdateUserModal } from "./UpdateUserModal";
 
 export {
   ThemeColorToggle,
@@ -70,4 +73,7 @@ export {
   SingleUserRow,
   Pagination,
   ImageWithTextAlert,
+  CopyButton,
+  ViewUserModal,
+  UpdateUserModal,
 };
