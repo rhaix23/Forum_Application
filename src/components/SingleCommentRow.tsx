@@ -9,6 +9,7 @@ import { UpdateCommentModal } from "./UpdateCommentModal";
 import { ViewCommentModal } from "./ViewCommentModal";
 import { useAppDispatch } from "../store";
 import { deleteComment } from "../features/comment/commentThunks";
+import { CopyButton } from "./CopyButton";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -56,6 +57,9 @@ export const SingleCommentRow = ({ comment }: IProps) => {
       />
       <tr>
         <td>
+          <CopyButton copyValue={comment._id} displayValue={comment._id} />
+        </td>
+        <td>
           <Text
             component={Link}
             to={`/profile/${comment.user._id}`}
@@ -72,9 +76,6 @@ export const SingleCommentRow = ({ comment }: IProps) => {
           >
             {comment.post.title}
           </Text>
-        </td>
-        <td>
-          <Text>{dayjs(comment.createdAt).format("MM/DD/YYYY")}</Text>
         </td>
         <td>
           <Flex justify="center" align="center">

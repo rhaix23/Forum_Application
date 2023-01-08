@@ -1,8 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { Status } from "../../types/app.types";
-import { ICategory } from "../../types/category.types";
 import { IComment } from "../../types/comment.types";
-import { api } from "../../utils/axios";
 import {
   createComment,
   deleteComment,
@@ -42,6 +40,8 @@ const commentSlice = createSlice({
     });
     builder.addCase(getComments.fulfilled, (state, action) => {
       state.comments = action.payload.comments;
+      state.count = action.payload.count;
+      state.pages = action.payload.pages;
       state.status = "resolved";
     });
     builder.addCase(getComments.rejected, (state, action) => {
@@ -112,7 +112,9 @@ const commentSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(getUserComments.fulfilled, (state, action) => {
-      state.userComments = action.payload.comments;
+      state.comments = action.payload.comments;
+      state.count = action.payload.count;
+      state.pages = action.payload.pages;
       state.status = "resolved";
     });
     builder.addCase(getUserComments.rejected, (state, action) => {
