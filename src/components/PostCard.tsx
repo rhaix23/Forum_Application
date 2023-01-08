@@ -54,7 +54,9 @@ const PostCard = ({ post }: IProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
-  const { status, error } = useSelector((state: RootState) => state.post);
+  const { status, ratingStatus } = useSelector(
+    (state: RootState) => state.post
+  );
 
   useEffect(() => {
     setTitle(post.title);
@@ -96,6 +98,10 @@ const PostCard = ({ post }: IProps) => {
   };
 
   const handleRate = (value: -1 | 1) => {
+    if (ratingStatus === "pending") {
+      return;
+    }
+
     if (!user) {
       toast.error("You must be logged in to rate posts");
       return;
