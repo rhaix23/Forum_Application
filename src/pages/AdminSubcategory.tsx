@@ -3,17 +3,15 @@ import { IconPlus } from "@tabler/icons";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { CreateSubcategoryModal, SingleSubcategoryRow } from "../components";
-import {
-  getCategories,
-  getSubcategories,
-} from "../features/category/categoryThunks";
+import { getCategories } from "../features/category/categoryThunks";
+import { getSubcategories } from "../features/subcategory/subcategoryThunks";
 import { RootState, useAppDispatch } from "../store";
 
 const AdminSubcategory = () => {
   const dispatch = useAppDispatch();
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const { subcategories, error } = useSelector(
-    (state: RootState) => state.category
+  const { subcategories } = useSelector(
+    (state: RootState) => state.subcategory
   );
 
   useEffect(() => {
@@ -45,9 +43,11 @@ const AdminSubcategory = () => {
       >
         <thead>
           <tr>
+            <th style={{ textAlign: "center" }}>ID</th>
             <th style={{ textAlign: "center" }}>Name</th>
             <th style={{ textAlign: "center" }}>Description</th>
             <th style={{ textAlign: "center" }}>Category</th>
+            <th style={{ textAlign: "center" }}>Allow Posts</th>
             <th style={{ textAlign: "center" }}>Actions</th>
           </tr>
         </thead>

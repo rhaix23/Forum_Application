@@ -13,3 +13,8 @@ export interface ISubcategory {
 export interface IPopulatedSubcategory extends Omit<ISubcategory, "category"> {
   category: ICategoryIdAndName;
 }
+
+export type ISubcategoryNameAndDescription = Omit<
+  ISubcategory,
+  "allowUsersToPost" | "category"
+>;

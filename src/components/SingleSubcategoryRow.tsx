@@ -1,13 +1,11 @@
-import { ActionIcon, Flex, Menu } from "@mantine/core";
+import { ActionIcon, Flex, Menu, Text } from "@mantine/core";
 import { IconDots, IconPencil, IconTrash } from "@tabler/icons";
 import { useState } from "react";
-import { deleteSubcategory } from "../features/category/categoryThunks";
+import { deleteSubcategory } from "../features/subcategory/subcategoryThunks";
 import { useAppDispatch } from "../store";
-import {
-  IPopulatedSubcategory,
-  ISubcategory,
-} from "../types/subcategory.types";
+import { IPopulatedSubcategory } from "../types/subcategory.types";
 import { ConfirmationModal } from "./ConfirmationModal";
+import { CopyButton } from "./CopyButton";
 import { UpdateSubcategoryModal } from "./UpdateSubcategoryModal";
 
 interface IProps {
@@ -37,9 +35,16 @@ export const SingleSubcategoryRow = ({ subcategory }: IProps) => {
         handleClick={handleDelete}
       />
       <tr>
+        <td>
+          <CopyButton
+            copyValue={subcategory._id}
+            displayValue={subcategory._id}
+          />
+        </td>
         <td>{subcategory.name}</td>
         <td>{subcategory.description}</td>
         <td>{subcategory.category.name}</td>
+        <td>{String(subcategory.allowUsersToPost)}</td>
         <td>
           <Flex justify="center" align="center">
             <Menu shadow="md">
