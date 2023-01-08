@@ -13,7 +13,7 @@ const Layout = () => {
   return (
     <Container sx={{ minHeight: "100%" }}>
       <Header />
-      <Box mt={120} sx={{ minHeight: "60vh" }}>
+      <Box mt={80} sx={{ minHeight: "60vh" }}>
         <Outlet />
       </Box>
       <Footer />
