@@ -20,6 +20,8 @@ interface IUserSliceState {
   profile: IUser | null;
   status: Status;
   error: string;
+  pages: number;
+  count: number;
 }
 
 const initialState: IUserSliceState = {
@@ -28,6 +30,8 @@ const initialState: IUserSliceState = {
   profile: null,
   status: "idle",
   error: "",
+  pages: 0,
+  count: 0,
 };
 
 const userSlice = createSlice({
@@ -111,17 +115,25 @@ const userSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      state.user = action.payload.user;
+      state.users = state.users.map((user) => {
+        if (user._id === action.payload.user._id) {
+          return action.payload.user;
+        }
+        return user;
+      });
+      if (state.user && state.user._id === action.payload.user._id) {
+        state.user = action.payload.user;
+      }
       if (state.profile && state.profile._id === action.payload.user._id) {
         state.profile = action.payload.user;
       }
-      state.status = "resolved";
       toast.success("Profile has been updated successfully.");
+      state.status = "resolved";
     });
     builder.addCase(updateUser.rejected, (state, action) => {
-      state.status = "rejected";
       action.payload && (state.error = action.payload);
       toast.error(action.payload);
+      state.status = "rejected";
     });
     builder.addCase(getUsers.pending, (state) => {
       state.status = "pending";
@@ -144,10 +156,16 @@ const userSlice = createSlice({
         }
         return user;
       });
+      toast.success(
+        `User account ${action.payload.user._id} has been ${
+          action.payload.user.isDisabled ? "deactivated" : "activated"
+        }`
+      );
       state.status = "resolved";
     });
     builder.addCase(updateAccountStatus.rejected, (state, action) => {
       action.payload && (state.error = action.payload);
+      toast.error(action.payload);
       state.status = "rejected";
     });
   },

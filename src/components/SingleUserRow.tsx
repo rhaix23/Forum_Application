@@ -1,11 +1,34 @@
-import { Button, createStyles, Flex, Text } from "@mantine/core";
-import { useState } from "react";
+import {
+  ActionIcon,
+  Button,
+  createStyles,
+  Flex,
+  Menu,
+  Text,
+} from "@mantine/core";
+import { useReducer, useState } from "react";
 import { IUser } from "../types/user.types";
 import { ConfirmationModal } from "./ConfirmationModal";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../store";
-import { updateAccountStatus, updateUser } from "../features/user/userThunks";
+import { updateAccountStatus } from "../features/user/userThunks";
+import { CopyButton } from "./CopyButton";
+import {
+  IconBan,
+  IconDots,
+  IconEye,
+  IconLock,
+  IconLockOpen,
+  IconPencil,
+} from "@tabler/icons";
+import {
+  ActionTypes,
+  modalReducer,
+  modalState,
+} from "../reducers/modalReducer";
+import { ViewUserModal } from "./ViewUserModal";
+import { UpdateUserModal } from "./UpdateUserModal";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -25,6 +48,7 @@ export const SingleUserRow = ({ user }: IProps) => {
   const dispatch = useAppDispatch();
   const { classes } = useStyles();
   const [openModal, setOpenModal] = useState(false);
+  const [modal, setModal] = useReducer(modalReducer, modalState);
 
   const handleClick = () => {
     if (user) {
@@ -39,6 +63,16 @@ export const SingleUserRow = ({ user }: IProps) => {
 
   return (
     <>
+      <ViewUserModal
+        user={user}
+        opened={modal.viewModalIsOpened}
+        setOpened={setModal}
+      />
+      <UpdateUserModal
+        user={user}
+        opened={modal.editModalIsOpened}
+        setOpened={setModal}
+      />
       <ConfirmationModal
         opened={openModal}
         setOpened={setOpenModal}
@@ -53,6 +87,9 @@ export const SingleUserRow = ({ user }: IProps) => {
       />
       <tr>
         <td>
+          <CopyButton copyValue={user._id} displayValue={user._id} />
+        </td>
+        <td>
           <Text
             component={Link}
             to={`/profile/${user._id}`}
@@ -62,18 +99,57 @@ export const SingleUserRow = ({ user }: IProps) => {
           </Text>
         </td>
         <td>{user.role}</td>
-        <td>{String(user.isDisabled)}</td>
-        <td>{dayjs(user.createdAt).format("MM/DD/YYYY")}</td>
         <td>
           <Flex justify="center" align="center">
-            <Button
-              size="xs"
-              color={user.isDisabled ? "blue" : "red"}
-              compact
-              onClick={() => setOpenModal(true)}
-            >
-              {user.isDisabled ? "Activate" : "Disable"}
-            </Button>
+            <Menu shadow="md">
+              <Menu.Target>
+                <ActionIcon>
+                  <IconDots size={18} />
+                </ActionIcon>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Item
+                  color="blue"
+                  icon={<IconEye size={16} />}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_VIEW_MODAL,
+                      payload: true,
+                    })
+                  }
+                  // onClick={() => setOpenViewModal(true)}
+                >
+                  View
+                </Menu.Item>
+                <Menu.Item
+                  color="yellow"
+                  icon={<IconPencil size={16} />}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_EDIT_MODAL,
+                      payload: true,
+                    })
+                  }
+                >
+                  Edit
+                </Menu.Item>
+
+                <Menu.Item
+                  color="red"
+                  icon={
+                    user.isDisabled ? (
+                      <IconLockOpen size={16} />
+                    ) : (
+                      <IconLock size={16} />
+                    )
+                  }
+                  onClick={() => setOpenModal(true)}
+                >
+                  {user.isDisabled ? "Activate" : "Disable"}
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
           </Flex>
         </td>
       </tr>
