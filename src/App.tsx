@@ -28,6 +28,7 @@ const LazyAdminSubcategory = lazy(() => import("./pages/AdminSubcategory"));
 const LazyAdminPosts = lazy(() => import("./pages/AdminPosts"));
 const LazyAdminComments = lazy(() => import("./pages/AdminComments"));
 const LazyAdminUsers = lazy(() => import("./pages/AdminUsers"));
+const LazyAdminReport = lazy(() => import("./pages/AdminReport"));
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -142,6 +143,14 @@ const App = () => {
                 element={
                   <Suspense fallback={<Loader variant="dots" />}>
                     <LazyAdminUsers />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/admin/reports"
+                element={
+                  <Suspense fallback={<Loader variant="dots" />}>
+                    <LazyAdminReport />
                   </Suspense>
                 }
               />

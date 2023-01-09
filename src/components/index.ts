@@ -36,6 +36,10 @@ import { ImageWithTextAlert } from "./ImageWithTextAlert";
 import { CopyButton } from "./CopyButton";
 import { ViewUserModal } from "./ViewUserModal";
 import { UpdateUserModal } from "./UpdateUserModal";
+import { ReportModal } from "./ReportModal";
+import { SingleReportRow } from "./SingleReportRow";
+import { ViewReportModal } from "./ViewReportModal";
+import { UpdateReportModal } from "./UpdateReportModal";
 
 export {
   ThemeColorToggle,
@@ -76,4 +80,8 @@ export {
   CopyButton,
   ViewUserModal,
   UpdateUserModal,
+  ReportModal,
+  SingleReportRow,
+  ViewReportModal,
+  UpdateReportModal,
 };

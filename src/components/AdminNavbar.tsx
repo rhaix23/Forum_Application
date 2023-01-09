@@ -9,6 +9,7 @@ import {
   IconUsers,
   IconBoxMultiple,
   IconSelector,
+  IconExclamationCircle,
 } from "@tabler/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { UserButton } from "./UserButton";
@@ -114,6 +115,7 @@ const data = [
   { link: "/admin/posts", label: "Posts", icon: IconInbox },
   { link: "/admin/comments", label: "Comments", icon: IconMessageCircle },
   { link: "/admin/users", label: "Users", icon: IconUsers },
+  { link: "/admin/reports", label: "Reports", icon: IconExclamationCircle },
 ];
 
 interface IProps {

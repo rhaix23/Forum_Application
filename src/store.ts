@@ -7,6 +7,7 @@ import {
   subcategorySlice,
   userSlice,
 } from "./features";
+import reportSlice from "./features/report/reportSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     subcategory: subcategorySlice,
     post: postSlice,
     comment: commentSlice,
+    report: reportSlice,
   },
 });
 
