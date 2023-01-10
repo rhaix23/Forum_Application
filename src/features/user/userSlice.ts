@@ -61,6 +61,7 @@ const userSlice = createSlice({
       toast.success("Logged in successfully.");
     });
     builder.addCase(login.rejected, (state, action) => {
+      console.log(action);
       action.payload && (state.error = action.payload);
       toast.error(action.payload);
       state.status = "rejected";

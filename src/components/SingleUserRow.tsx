@@ -118,7 +118,6 @@ export const SingleUserRow = ({ user }: IProps) => {
                       payload: true,
                     })
                   }
-                  // onClick={() => setOpenViewModal(true)}
                 >
                   View
                 </Menu.Item>

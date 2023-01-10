@@ -102,12 +102,7 @@ const postSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(createPost.fulfilled, (state, action) => {
-      state.posts = state.posts.map((post) => {
-        if (post._id === action.payload.post._id) {
-          return action.payload.post;
-        }
-        return post;
-      });
+      state.posts.unshift(action.payload.post);
       state.post = action.payload.post;
       toast.success("New post has been created");
       state.status = "resolved";
