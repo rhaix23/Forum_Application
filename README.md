@@ -13,6 +13,16 @@ Backend Repository: https://github.com/rhaix23/Forum_Application_Api
 - Mantine UI (Component Library)
 - Vercel (Hosting Service)
 
+## Features
+- Forum is divided into sections and subsections
+- User Module
+- Admin Module
+- Authentication using JWT tokens stored in HttpOnly cookie
+- Users are allowed to post and comment
+- Users are allowed to submit a report
+
+
+
 ## Installation
 1. Clone the frontend and backend repositories.
 2. Run 'npm install' on both.
