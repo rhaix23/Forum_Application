@@ -276,12 +276,16 @@ export const deletePostRate = createAsyncThunk<
 // @route   GET /api/post/user/:id
 // @access  Public
 export const getUserPosts = createAsyncThunk<
-  { posts: IPost[] },
-  { userId: string },
+  { posts: IPost[]; count: number; pages: number },
+  { userId: string; query: IQueryState },
   { rejectValue: string }
->("post/getUserPosts", async ({ userId }, thunkAPI) => {
+>("post/getUserPosts", async ({ userId, query }, thunkAPI) => {
+  let queries = "";
+  if (query.activePage) {
+    queries += `page=${query.activePage}&`;
+  }
   try {
-    const response = await api.get(`/post/user/${userId}`);
+    const response = await api.get(`/post/user/${userId}?${queries}`);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

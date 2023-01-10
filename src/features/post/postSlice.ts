@@ -44,8 +44,10 @@ const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
-    setSort: (state, action) => {
-      state.sort = action.payload.sort;
+    clearPosts: (state) => {
+      state.posts = [];
+      state.count = 1;
+      state.pages = 1;
     },
   },
   extraReducers: (builder) => {
@@ -179,7 +181,9 @@ const postSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(getUserPosts.fulfilled, (state, action) => {
-      state.userPosts = action.payload.posts;
+      state.posts = action.payload.posts;
+      state.pages = action.payload.pages;
+      state.count = action.payload.count;
       state.status = "resolved";
     });
     builder.addCase(getUserPosts.rejected, (state, action) => {
@@ -200,6 +204,6 @@ const postSlice = createSlice({
   },
 });
 
-export const { setSort } = postSlice.actions;
+export const { clearPosts } = postSlice.actions;
 
 export default postSlice.reducer;

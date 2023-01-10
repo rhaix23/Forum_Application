@@ -14,7 +14,6 @@ import { Action } from "@remix-run/router";
 
 interface ICommentSliceState {
   comments: IComment[];
-  userComments: IComment[];
   status: Status;
   error: string;
   count: number;
@@ -23,17 +22,22 @@ interface ICommentSliceState {
 
 const initialState: ICommentSliceState = {
   comments: [],
-  userComments: [],
   status: "idle",
   error: "",
-  count: 0,
-  pages: 0,
+  count: 1,
+  pages: 1,
 };
 
 const commentSlice = createSlice({
   name: "comment",
   initialState,
-  reducers: {},
+  reducers: {
+    clearComments: (state) => {
+      state.comments = [];
+      state.count = 1;
+      state.pages = 1;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getComments.pending, (state) => {
       state.status = "pending";

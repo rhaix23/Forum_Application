@@ -144,14 +144,8 @@ export const getUserComments = createAsyncThunk<
   { rejectValue: string }
 >("comment/getUserComments", async ({ userId, query }, thunkAPI) => {
   let queries = "";
-  if (query.sort) {
-    queries += `sort=${query.sort.value}&`;
-  }
   if (query.activePage) {
-    queries += `page=${query.activePage}&`;
-  }
-  if (query.limit) {
-    queries += `limit=${query.limit}`;
+    queries += `page=${query.activePage}`;
   }
   try {
     const response = await api.get(`/comment/user/${userId}?${queries}`);
