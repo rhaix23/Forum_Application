@@ -1,7 +1,12 @@
 import { ActionIcon, Flex, Menu, Text } from "@mantine/core";
 import { IconDots, IconPencil, IconTrash } from "@tabler/icons";
-import { useState } from "react";
+import { useReducer } from "react";
 import { deleteCategory } from "../features/category/categoryThunks";
+import {
+  ActionTypes,
+  modalReducer,
+  modalState,
+} from "../reducers/modalReducer";
 import { useAppDispatch } from "../store";
 import { ICategory } from "../types/category.types";
 import { ConfirmationModal } from "./ConfirmationModal";
@@ -14,25 +19,22 @@ interface IProps {
 
 export const SingleCategoryRow = ({ category }: IProps) => {
   const dispatch = useAppDispatch();
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const handleDelete = () => {
-    dispatch(deleteCategory({ categoryId: category._id }));
-    setOpenDeleteModal(false);
-  };
+  const [modal, setModal] = useReducer(modalReducer, modalState);
 
   return (
     <>
       <UpdateCategoryModal
         category={category}
-        opened={openEditModal}
-        setOpened={setOpenEditModal}
+        opened={modal.editModalIsOpened}
+        setOpened={setModal}
       />
       <ConfirmationModal
-        opened={openDeleteModal}
-        setOpened={setOpenDeleteModal}
-        handleClick={handleDelete}
+        opened={modal.deleteModalIsOpened}
+        setOpened={setModal}
+        handleClick={async () => {
+          await dispatch(deleteCategory({ categoryId: category._id }));
+          setModal({ type: ActionTypes.HANDLE_DELETE_MODAL, payload: false });
+        }}
       />
       <tr>
         <td>
@@ -59,14 +61,24 @@ export const SingleCategoryRow = ({ category }: IProps) => {
                 <Menu.Item
                   color="yellow"
                   icon={<IconPencil size={16} />}
-                  onClick={() => setOpenEditModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_EDIT_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Edit
                 </Menu.Item>
                 <Menu.Item
                   color="red"
                   icon={<IconTrash size={16} />}
-                  onClick={() => setOpenDeleteModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_DELETE_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Delete
                 </Menu.Item>

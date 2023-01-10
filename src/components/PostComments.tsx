@@ -9,9 +9,8 @@ import {
   queryReducer,
   queryState,
   QueryTypes,
-} from "../reducers/adminPostsQueryReducer";
+} from "../reducers/queryReducer";
 import { RootState, useAppDispatch } from "../store";
-import { QueryOptionTypes } from "../types/post.types";
 import { Pagination } from "./Pagination";
 import { SingleComment } from "./SingleComment";
 
@@ -87,7 +86,7 @@ export const PostComments = () => {
           page={queryOptions.activePage}
           totalPages={pages}
           handleClick={setQueryOptions}
-          type={QueryOptionTypes.ACTIVEPAGE}
+          type={QueryTypes.ACTIVE_PAGE}
         />
       )}
     </section>

@@ -1,20 +1,23 @@
 import { Button, Divider, Group, Modal, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import { Dispatch } from "react";
+import { ActionTypes, IModalActions } from "../reducers/modalReducer";
 import { IAdminPagePost } from "../types/post.types";
 import { RichTextContent } from "./RichTextContent";
 
 interface IProps {
   post: IAdminPagePost;
   opened: boolean;
-  setOpened: Dispatch<React.SetStateAction<boolean>>;
+  setOpened: React.Dispatch<IModalActions>;
 }
 
 export const ViewPostModal = ({ post, opened, setOpened }: IProps) => {
   return (
     <Modal
       opened={opened}
-      onClose={() => setOpened(false)}
+      onClose={() =>
+        setOpened({ type: ActionTypes.HANDLE_VIEW_MODAL, payload: false })
+      }
       title="View Post's Informaton"
       size="lg"
       centered
@@ -33,7 +36,13 @@ export const ViewPostModal = ({ post, opened, setOpened }: IProps) => {
       </Text>
       <RichTextContent>{post.body}</RichTextContent>
       <Group position="right" mt={16}>
-        <Button size="xs" color="gray" onClick={() => setOpened(false)}>
+        <Button
+          size="xs"
+          color="gray"
+          onClick={() =>
+            setOpened({ type: ActionTypes.HANDLE_VIEW_MODAL, payload: false })
+          }
+        >
           Close
         </Button>
       </Group>

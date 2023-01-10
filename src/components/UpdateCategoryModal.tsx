@@ -1,13 +1,15 @@
 import { Button, Group, Modal, TextInput } from "@mantine/core";
 import { Dispatch, useState } from "react";
+import { useSelector } from "react-redux";
 import { updateCategory } from "../features/category/categoryThunks";
-import { useAppDispatch } from "../store";
+import { ActionTypes, IModalActions } from "../reducers/modalReducer";
+import { RootState, useAppDispatch } from "../store";
 import { ICategory } from "../types/category.types";
 
 interface IProps {
   category: ICategory;
   opened: boolean;
-  setOpened: Dispatch<React.SetStateAction<boolean>>;
+  setOpened: React.Dispatch<IModalActions>;
 }
 
 export const UpdateCategoryModal = ({
@@ -16,17 +18,20 @@ export const UpdateCategoryModal = ({
   setOpened,
 }: IProps) => {
   const dispatch = useAppDispatch();
+  const { status } = useSelector((state: RootState) => state.category);
   const [name, setName] = useState(category.name);
 
-  const handleUpdate = () => {
-    dispatch(updateCategory({ categoryId: category._id, name }));
-    setOpened(false);
+  const handleUpdate = async () => {
+    await dispatch(updateCategory({ categoryId: category._id, name }));
+    setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false });
   };
 
   return (
     <Modal
       opened={opened}
-      onClose={() => setOpened(false)}
+      onClose={() =>
+        setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false })
+      }
       title="Update Category"
       centered
     >
@@ -40,10 +45,17 @@ export const UpdateCategoryModal = ({
         withAsterisk
       />
       <Group position="right" mt={16}>
-        <Button size="xs" color="gray" onClick={() => setOpened(false)}>
+        <Button
+          size="xs"
+          color="gray"
+          onClick={() =>
+            setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false })
+          }
+          disabled={status === "pending"}
+        >
           Cancel
         </Button>
-        <Button size="xs" onClick={handleUpdate}>
+        <Button size="xs" onClick={handleUpdate} loading={status === "pending"}>
           Save
         </Button>
       </Group>

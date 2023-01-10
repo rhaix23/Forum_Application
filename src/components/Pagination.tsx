@@ -1,6 +1,4 @@
 import { Group, Pagination } from "@mantine/core";
-import React from "react";
-import { IQueryOptionsAction, QueryOptionTypes } from "../types/post.types";
 
 interface IProps {
   page: number;

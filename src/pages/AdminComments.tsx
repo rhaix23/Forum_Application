@@ -24,7 +24,7 @@ import {
   queryReducer,
   queryState,
   QueryTypes,
-} from "../reducers/adminPostsQueryReducer";
+} from "../reducers/queryReducer";
 import { RootState, useAppDispatch } from "../store";
 import { SortOptions } from "../types/app.types";
 import { verifyId } from "../utils/verifyId";

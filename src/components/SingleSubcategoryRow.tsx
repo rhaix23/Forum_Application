@@ -1,7 +1,12 @@
-import { ActionIcon, Flex, Menu, Text } from "@mantine/core";
+import { ActionIcon, Flex, Menu } from "@mantine/core";
 import { IconDots, IconPencil, IconTrash } from "@tabler/icons";
-import { useState } from "react";
+import { useReducer } from "react";
 import { deleteSubcategory } from "../features/subcategory/subcategoryThunks";
+import {
+  ActionTypes,
+  modalReducer,
+  modalState,
+} from "../reducers/modalReducer";
 import { useAppDispatch } from "../store";
 import { IPopulatedSubcategory } from "../types/subcategory.types";
 import { ConfirmationModal } from "./ConfirmationModal";
@@ -14,25 +19,22 @@ interface IProps {
 
 export const SingleSubcategoryRow = ({ subcategory }: IProps) => {
   const dispatch = useAppDispatch();
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const handleDelete = () => {
-    dispatch(deleteSubcategory({ subcategoryId: subcategory._id }));
-    setOpenDeleteModal(false);
-  };
+  const [modal, setModal] = useReducer(modalReducer, modalState);
 
   return (
     <>
       <UpdateSubcategoryModal
-        opened={openEditModal}
-        setOpened={setOpenEditModal}
+        opened={modal.editModalIsOpened}
+        setOpened={setModal}
         subcategory={subcategory}
       />
       <ConfirmationModal
-        opened={openDeleteModal}
-        setOpened={setOpenDeleteModal}
-        handleClick={handleDelete}
+        opened={modal.deleteModalIsOpened}
+        setOpened={setModal}
+        handleClick={() => {
+          dispatch(deleteSubcategory({ subcategoryId: subcategory._id }));
+          setModal({ type: ActionTypes.HANDLE_DELETE_MODAL, payload: false });
+        }}
       />
       <tr>
         <td>
@@ -58,14 +60,24 @@ export const SingleSubcategoryRow = ({ subcategory }: IProps) => {
                 <Menu.Item
                   color="yellow"
                   icon={<IconPencil size={16} />}
-                  onClick={() => setOpenEditModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_EDIT_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Edit
                 </Menu.Item>
                 <Menu.Item
                   color="red"
                   icon={<IconTrash size={16} />}
-                  onClick={() => setOpenDeleteModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_DELETE_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Delete
                 </Menu.Item>

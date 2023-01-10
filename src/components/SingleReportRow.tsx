@@ -1,7 +1,7 @@
-import { ActionIcon, createStyles, Flex, Menu, Text } from "@mantine/core";
+import { ActionIcon, createStyles, Flex, Menu } from "@mantine/core";
 import { IconDots, IconEye, IconPencil, IconTrash } from "@tabler/icons";
 import React, { useReducer } from "react";
-import { Link } from "react-router-dom";
+import { deleteReport } from "../features/report/reportThunks";
 import {
   ActionTypes,
   modalReducer,
@@ -9,19 +9,10 @@ import {
 } from "../reducers/modalReducer";
 import { useAppDispatch } from "../store";
 import { IReport } from "../types/reports.types";
+import { ConfirmationModal } from "./ConfirmationModal";
 import { CopyButton } from "./CopyButton";
 import { UpdateReportModal } from "./UpdateReportModal";
 import { ViewReportModal } from "./ViewReportModal";
-
-const useStyles = createStyles((theme) => ({
-  link: {
-    color: theme.colors.blue[7],
-    ":hover": {
-      color: theme.colors.blue[9],
-      textDecoration: "underline",
-    },
-  },
-}));
 
 interface IProps {
   report: IReport;
@@ -29,7 +20,6 @@ interface IProps {
 
 export const SingleReportRow = ({ report }: IProps) => {
   const dispatch = useAppDispatch();
-  const { classes } = useStyles();
   const [modal, setModal] = useReducer(modalReducer, modalState);
 
   return (
@@ -43,6 +33,14 @@ export const SingleReportRow = ({ report }: IProps) => {
         opened={modal.editModalIsOpened}
         setOpened={setModal}
         report={report}
+      />
+      <ConfirmationModal
+        opened={modal.deleteModalIsOpened}
+        setOpened={setModal}
+        handleClick={async () => {
+          await dispatch(deleteReport({ reportId: report._id }));
+          setModal({ type: ActionTypes.HANDLE_DELETE_MODAL, payload: false });
+        }}
       />
       <tr>
         <td>
@@ -93,7 +91,12 @@ export const SingleReportRow = ({ report }: IProps) => {
                 <Menu.Item
                   color="red"
                   icon={<IconTrash size={16} />}
-                  // onClick={() => setOpenDeleteModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_DELETE_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Delete
                 </Menu.Item>

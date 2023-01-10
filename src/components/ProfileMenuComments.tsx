@@ -3,7 +3,7 @@ import { useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getUserComments } from "../features/comment/commentThunks";
-import { queryReducer, queryState } from "../reducers/adminPostsQueryReducer";
+import { queryReducer, queryState } from "../reducers/queryReducer";
 import { RootState, useAppDispatch } from "../store";
 import { SingleComment } from "./SingleComment";
 

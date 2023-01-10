@@ -14,7 +14,6 @@ import {
 import { IconBrandGithub, IconBrandLinkedin, IconMail } from "@tabler/icons";
 import { ChangeEvent, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import { updateUser } from "../features/user/userThunks";
 import { RootState, useAppDispatch } from "../store";
 import { CopyButton } from "./CopyButton";

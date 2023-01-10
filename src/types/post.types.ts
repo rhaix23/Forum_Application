@@ -41,26 +41,3 @@ export interface IAdminPagePost {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export interface IQueryOptionsState {
-  sort: { text: string; value: SortOptions };
-  time: { text: string; value: TimeFilterOptions };
-  search: string;
-  activePage: number;
-}
-
-export enum QueryOptionTypes {
-  SORT = "SORT",
-  FILTERBYTIME = "FILTERBYTIME",
-  ACTIVEPAGE = "ACTIVEPAGE",
-  SEARCH = "SEARCH",
-}
-
-export interface IQueryOptionsAction {
-  type: QueryOptionTypes;
-  payload:
-    | { text: string; value: SortOptions }
-    | { text: string; value: TimeFilterOptions }
-    | string
-    | number;
-}

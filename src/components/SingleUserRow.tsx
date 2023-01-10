@@ -47,18 +47,17 @@ interface IProps {
 export const SingleUserRow = ({ user }: IProps) => {
   const dispatch = useAppDispatch();
   const { classes } = useStyles();
-  const [openModal, setOpenModal] = useState(false);
   const [modal, setModal] = useReducer(modalReducer, modalState);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (user) {
-      dispatch(
+      await dispatch(
         updateAccountStatus({
           userId: user._id,
         })
       );
     }
-    setOpenModal(false);
+    setModal({ type: ActionTypes.HANDLE_DELETE_MODAL, payload: false });
   };
 
   return (
@@ -74,8 +73,8 @@ export const SingleUserRow = ({ user }: IProps) => {
         setOpened={setModal}
       />
       <ConfirmationModal
-        opened={openModal}
-        setOpened={setOpenModal}
+        opened={modal.deleteModalIsOpened}
+        setOpened={setModal}
         text={
           user.isDisabled
             ? "Activate this user's account and allow them to log in"
@@ -143,7 +142,12 @@ export const SingleUserRow = ({ user }: IProps) => {
                       <IconLock size={16} />
                     )
                   }
-                  onClick={() => setOpenModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_DELETE_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   {user.isDisabled ? "Activate" : "Disable"}
                 </Menu.Item>

@@ -12,6 +12,7 @@ import { Dispatch, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { editPost } from "../features/post/postThunks";
+import { ActionTypes, IModalActions } from "../reducers/modalReducer";
 import { RootState, useAppDispatch } from "../store";
 import { IAdminPagePost, IPost } from "../types/post.types";
 import { RichTextEditor } from "./RichTextEditor";
@@ -19,7 +20,7 @@ import { RichTextEditor } from "./RichTextEditor";
 interface IProps {
   post: IAdminPagePost;
   opened: boolean;
-  setOpened: Dispatch<React.SetStateAction<boolean>>;
+  setOpened: React.Dispatch<IModalActions>;
 }
 
 export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
@@ -33,7 +34,7 @@ export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
   const [subcategory, setSubcategory] = useState(post.subcategory.name);
   const [isLocked, setIsLocked] = useState(post.isLocked);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const subcategoryFound = subcategories.find((s) => s.name === subcategory);
 
     if (!subcategoryFound) {
@@ -41,7 +42,7 @@ export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
       return;
     }
 
-    dispatch(
+    await dispatch(
       editPost({
         id: post._id,
         title,
@@ -50,13 +51,16 @@ export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
         isLocked,
       })
     );
-    setOpened(false);
+
+    setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false });
   };
 
   return (
     <Modal
       opened={opened}
-      onClose={() => setOpened(false)}
+      onClose={() =>
+        setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false })
+      }
       title="Update Post"
       size="lg"
       centered
@@ -93,10 +97,17 @@ export const UpdatePostModal = ({ post, opened, setOpened }: IProps) => {
         onChange={(event) => setIsLocked(event.currentTarget.checked)}
       />
       <Group position="right" mt={16}>
-        <Button size="xs" color="gray" onClick={() => setOpened(false)}>
+        <Button
+          size="xs"
+          color="gray"
+          onClick={() =>
+            setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false })
+          }
+          disabled={status === "pending"}
+        >
           Cancel
         </Button>
-        <Button size="xs" onClick={handleSubmit}>
+        <Button size="xs" onClick={handleSubmit} loading={status === "pending"}>
           Save
         </Button>
       </Group>

@@ -21,7 +21,7 @@ import {
   queryReducer,
   queryState,
   QueryTypes,
-} from "../reducers/adminPostsQueryReducer";
+} from "../reducers/queryReducer";
 import { toast } from "react-toastify";
 
 const AdminPosts = () => {

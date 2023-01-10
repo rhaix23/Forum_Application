@@ -4,7 +4,6 @@ import { ProfileMenuAccount } from "./ProfileMenuAccount";
 import { RichTextEditor } from "./RichTextEditor";
 import { ScrollToTop } from "./ScrollToTop";
 import { ThemeColorToggle } from "./ThemeColorToggle";
-import { PostsOptions } from "./PostsOptions";
 import { CreatePostModal } from "./createPostModal";
 import { RichTextContent } from "./RichTextContent";
 import { PostComments } from "./PostComments";
@@ -47,7 +46,6 @@ export {
   ScrollToTop,
   RichTextEditor,
   PreviewPostCard,
-  PostsOptions,
   ProfileMenuAccount,
   CreatePostModal,
   RichTextContent,

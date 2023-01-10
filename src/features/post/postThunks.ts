@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
-import { IQueryState, ISort } from "../../reducers/adminPostsQueryReducer";
+import { IQueryState, ISort } from "../../reducers/queryReducer";
 import { RootState } from "../../store";
 import { TimeFilterOptions, SortOptions } from "../../types/app.types";
 import { IAdminPagePost, IPost } from "../../types/post.types";

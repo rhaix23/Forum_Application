@@ -1,10 +1,9 @@
-import { Button, Group, Modal, Text, TextInput } from "@mantine/core";
-import { Dispatch } from "react";
-import { IModalActions } from "../reducers/modalReducer";
+import { Button, Group, Modal, Text } from "@mantine/core";
+import { ActionTypes, IModalActions } from "../reducers/modalReducer";
 
 interface IProps {
   opened: boolean;
-  setOpened: Dispatch<React.SetStateAction<boolean>>;
+  setOpened: React.Dispatch<IModalActions>;
   title?: string;
   text?: string;
   confirmationText?: string;
@@ -24,13 +23,21 @@ export const ConfirmationModal = ({
   return (
     <Modal
       opened={opened}
-      onClose={() => setOpened(false)}
+      onClose={() =>
+        setOpened({ type: ActionTypes.HANDLE_DELETE_MODAL, payload: false })
+      }
       title={title}
       centered
     >
       <Text>{text}</Text>
       <Group position="right" mt={16}>
-        <Button size="xs" color="gray" onClick={() => setOpened(false)}>
+        <Button
+          size="xs"
+          color="gray"
+          onClick={() =>
+            setOpened({ type: ActionTypes.HANDLE_DELETE_MODAL, payload: false })
+          }
+        >
           Cancel
         </Button>
         <Button size="xs" color={confirmationColor} onClick={handleClick}>

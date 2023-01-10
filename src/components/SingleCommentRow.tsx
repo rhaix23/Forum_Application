@@ -1,6 +1,6 @@
 import { ActionIcon, createStyles, Flex, Menu, Text } from "@mantine/core";
 import { IconDots, IconEye, IconPencil, IconTrash } from "@tabler/icons";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import { IComment } from "../types/comment.types";
 import { ConfirmationModal } from "./ConfirmationModal";
@@ -10,6 +10,11 @@ import { ViewCommentModal } from "./ViewCommentModal";
 import { useAppDispatch } from "../store";
 import { deleteComment } from "../features/comment/commentThunks";
 import { CopyButton } from "./CopyButton";
+import {
+  ActionTypes,
+  modalReducer,
+  modalState,
+} from "../reducers/modalReducer";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -28,32 +33,31 @@ interface IProps {
 export const SingleCommentRow = ({ comment }: IProps) => {
   const dispatch = useAppDispatch();
   const { classes } = useStyles();
-  const [openViewModal, setOpenViewModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [modal, setModal] = useReducer(modalReducer, modalState);
 
   return (
     <>
       <ViewCommentModal
-        opened={openViewModal}
-        setOpened={setOpenViewModal}
+        opened={modal.viewModalIsOpened}
+        setOpened={setModal}
         comment={comment}
       />
       <UpdateCommentModal
-        opened={openEditModal}
-        setOpened={setOpenEditModal}
+        opened={modal.editModalIsOpened}
+        setOpened={setModal}
         comment={comment}
       />
       <ConfirmationModal
-        opened={openDeleteModal}
-        setOpened={setOpenDeleteModal}
-        handleClick={() =>
-          dispatch(
+        opened={modal.deleteModalIsOpened}
+        setOpened={setModal}
+        handleClick={async () => {
+          await dispatch(
             deleteComment({
               commentId: comment._id,
             })
-          )
-        }
+          );
+          setModal({ type: ActionTypes.HANDLE_DELETE_MODAL, payload: false });
+        }}
       />
       <tr>
         <td>
@@ -90,21 +94,36 @@ export const SingleCommentRow = ({ comment }: IProps) => {
                 <Menu.Item
                   color="blue"
                   icon={<IconEye size={16} />}
-                  onClick={() => setOpenViewModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_VIEW_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   View
                 </Menu.Item>
                 <Menu.Item
                   color="yellow"
                   icon={<IconPencil size={16} />}
-                  onClick={() => setOpenEditModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_EDIT_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Edit
                 </Menu.Item>
                 <Menu.Item
                   color="red"
                   icon={<IconTrash size={16} />}
-                  onClick={() => setOpenDeleteModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_DELETE_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Delete
                 </Menu.Item>

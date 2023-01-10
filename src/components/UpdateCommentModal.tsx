@@ -1,20 +1,21 @@
 import { Box, Button, Group, Modal, Text, TextInput } from "@mantine/core";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../store";
 import { IComment } from "../types/comment.types";
 import { RichTextEditor } from "./RichTextEditor";
 import { updateComment } from "../features/comment/commentThunks";
+import { ActionTypes, IModalActions } from "../reducers/modalReducer";
 
 interface IProps {
   comment: IComment;
   opened: boolean;
-  setOpened: Dispatch<React.SetStateAction<boolean>>;
+  setOpened: React.Dispatch<IModalActions>;
 }
 
 export const UpdateCommentModal = ({ comment, opened, setOpened }: IProps) => {
   const dispatch = useAppDispatch();
-  const { status } = useSelector((state: RootState) => state.category);
+  const { status } = useSelector((state: RootState) => state.comment);
   const [body, setBody] = useState(comment.body);
 
   const handleSubmit = () => {
@@ -28,13 +29,15 @@ export const UpdateCommentModal = ({ comment, opened, setOpened }: IProps) => {
       })
     );
 
-    setOpened(false);
+    setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false });
   };
 
   return (
     <Modal
       opened={opened}
-      onClose={() => setOpened(false)}
+      onClose={() =>
+        setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false })
+      }
       title="Update Comment"
       size="lg"
       centered
@@ -55,10 +58,17 @@ export const UpdateCommentModal = ({ comment, opened, setOpened }: IProps) => {
         <RichTextEditor content={body} setContent={setBody} status={status} />
       </Box>
       <Group position="right" mt={16}>
-        <Button size="xs" color="gray" onClick={() => setOpened(false)}>
+        <Button
+          size="xs"
+          color="gray"
+          onClick={() =>
+            setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false })
+          }
+          disabled={status === "pending"}
+        >
           Cancel
         </Button>
-        <Button size="xs" onClick={handleSubmit}>
+        <Button size="xs" onClick={handleSubmit} loading={status === "pending"}>
           Save
         </Button>
       </Group>

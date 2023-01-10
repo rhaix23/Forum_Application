@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
-import { IQueryState } from "../../reducers/adminPostsQueryReducer";
+import { IQueryState } from "../../reducers/queryReducer";
 import {
   IReport,
   ISubmitReportReq,

@@ -5,30 +5,33 @@ import {
   Group,
   NativeSelect,
   Table,
+  Text,
   TextInput,
 } from "@mantine/core";
 import { DateRangePicker } from "@mantine/dates";
 import { IconSearch } from "@tabler/icons";
 import { useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
-import { SingleReportRow } from "../components";
+import { Pagination, SingleReportRow } from "../components";
 import { getReports } from "../features/report/reportThunks";
 import {
   ISort,
   queryReducer,
   queryState,
   QueryTypes,
-} from "../reducers/adminPostsQueryReducer";
+} from "../reducers/queryReducer";
 import { RootState, useAppDispatch } from "../store";
 
 const AdminReport = () => {
   const dispatch = useAppDispatch();
-  const { reports, status } = useSelector((state: RootState) => state.report);
+  const { reports, status, pages } = useSelector(
+    (state: RootState) => state.report
+  );
   const [queryOptions, setQueryOptions] = useReducer(queryReducer, queryState);
 
   useEffect(() => {
     dispatch(getReports(queryOptions));
-  }, []);
+  }, [queryOptions.activePage]);
 
   return (
     <Box>
@@ -173,6 +176,19 @@ const AdminReport = () => {
           ))}
         </tbody>
       </Table>
+
+      {reports.length === 0 && (
+        <Text align="center" mt={32}>
+          No data matches the specified search term or date range.
+        </Text>
+      )}
+
+      <Pagination
+        page={queryOptions.activePage}
+        totalPages={pages}
+        handleClick={setQueryOptions}
+        type={QueryTypes.ACTIVE_PAGE}
+      />
     </Box>
   );
 };

@@ -28,7 +28,7 @@ import {
   queryReducer,
   queryState,
   QueryTypes,
-} from "../reducers/adminPostsQueryReducer";
+} from "../reducers/queryReducer";
 import { DateRangePicker } from "@mantine/dates";
 
 const Posts = () => {

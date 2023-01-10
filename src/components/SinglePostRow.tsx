@@ -1,6 +1,6 @@
 import { ActionIcon, createStyles, Flex, Menu, Text } from "@mantine/core";
 import { IconDots, IconEye, IconPencil, IconTrash } from "@tabler/icons";
-import { useState } from "react";
+import { useReducer } from "react";
 import { Link } from "react-router-dom";
 import { IAdminPagePost, IPost } from "../types/post.types";
 import { ConfirmationModal } from "./ConfirmationModal";
@@ -8,8 +8,12 @@ import { UpdatePostModal } from "./UpdatePostModal";
 import { ViewPostModal } from "./ViewPostModal";
 import { useAppDispatch } from "../store";
 import { deletePost } from "../features/post/postThunks";
-import dayjs from "dayjs";
 import { CopyButton } from "./CopyButton";
+import {
+  ActionTypes,
+  modalReducer,
+  modalState,
+} from "../reducers/modalReducer";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -28,31 +32,27 @@ interface IProps {
 export const SinglePostRow = ({ post }: IProps) => {
   const dispatch = useAppDispatch();
   const { classes } = useStyles();
-  const [openViewModal, setOpenViewModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const handleDelete = () => {
-    dispatch(deletePost({ id: post._id }));
-    setOpenDeleteModal(false);
-  };
+  const [modal, setModal] = useReducer(modalReducer, modalState);
 
   return (
     <>
       <ViewPostModal
-        opened={openViewModal}
-        setOpened={setOpenViewModal}
+        opened={modal.viewModalIsOpened}
+        setOpened={setModal}
         post={post}
       />
       <UpdatePostModal
-        opened={openEditModal}
-        setOpened={setOpenEditModal}
+        opened={modal.editModalIsOpened}
+        setOpened={setModal}
         post={post}
       />
       <ConfirmationModal
-        opened={openDeleteModal}
-        setOpened={setOpenDeleteModal}
-        handleClick={handleDelete}
+        opened={modal.deleteModalIsOpened}
+        setOpened={setModal}
+        handleClick={async () => {
+          await dispatch(deletePost({ id: post._id }));
+          setModal({ type: ActionTypes.HANDLE_DELETE_MODAL, payload: false });
+        }}
       />
       <tr>
         <td>
@@ -80,21 +80,36 @@ export const SinglePostRow = ({ post }: IProps) => {
                 <Menu.Item
                   color="blue"
                   icon={<IconEye size={16} />}
-                  onClick={() => setOpenViewModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_VIEW_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   View
                 </Menu.Item>
                 <Menu.Item
                   color="yellow"
                   icon={<IconPencil size={16} />}
-                  onClick={() => setOpenEditModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_EDIT_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Edit
                 </Menu.Item>
                 <Menu.Item
                   color="red"
                   icon={<IconTrash size={16} />}
-                  onClick={() => setOpenDeleteModal(true)}
+                  onClick={() =>
+                    setModal({
+                      type: ActionTypes.HANDLE_DELETE_MODAL,
+                      payload: true,
+                    })
+                  }
                 >
                   Delete
                 </Menu.Item>

@@ -6,17 +6,18 @@ import {
   NativeSelect,
   TextInput,
 } from "@mantine/core";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { updateSubcategory } from "../features/subcategory/subcategoryThunks";
+import { ActionTypes, IModalActions } from "../reducers/modalReducer";
 import { RootState, useAppDispatch } from "../store";
 import { IPopulatedSubcategory } from "../types/subcategory.types";
 
 interface IProps {
   subcategory: IPopulatedSubcategory;
   opened: boolean;
-  setOpened: Dispatch<React.SetStateAction<boolean>>;
+  setOpened: React.Dispatch<IModalActions>;
 }
 
 export const UpdateSubcategoryModal = ({
@@ -26,6 +27,7 @@ export const UpdateSubcategoryModal = ({
 }: IProps) => {
   const dispatch = useAppDispatch();
   const { categories } = useSelector((state: RootState) => state.category);
+  const { status } = useSelector((state: RootState) => state.subcategory);
   const [name, setName] = useState(subcategory.name);
   const [description, setDescription] = useState(subcategory.description);
   const [category, setCategory] = useState(subcategory.category.name);
@@ -33,7 +35,7 @@ export const UpdateSubcategoryModal = ({
     subcategory.allowUsersToPost
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const categoryFound = categories.find((c) => c.name === category);
 
     if (!categoryFound) {
@@ -41,7 +43,7 @@ export const UpdateSubcategoryModal = ({
       return;
     }
 
-    dispatch(
+    await dispatch(
       updateSubcategory({
         subcategoryId: subcategory._id,
         name,
@@ -51,13 +53,15 @@ export const UpdateSubcategoryModal = ({
       })
     );
 
-    setOpened(false);
+    setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false });
   };
 
   return (
     <Modal
       opened={opened}
-      onClose={() => setOpened(false)}
+      onClose={() =>
+        setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false })
+      }
       title="Update Category"
       centered
     >
@@ -99,10 +103,17 @@ export const UpdateSubcategoryModal = ({
         mt={16}
       />
       <Group position="right" mt={16}>
-        <Button size="xs" color="gray" onClick={() => setOpened(false)}>
+        <Button
+          size="xs"
+          color="gray"
+          onClick={() =>
+            setOpened({ type: ActionTypes.HANDLE_EDIT_MODAL, payload: false })
+          }
+          disabled={status === "pending"}
+        >
           Cancel
         </Button>
-        <Button size="xs" onClick={handleSubmit}>
+        <Button size="xs" onClick={handleSubmit} loading={status === "pending"}>
           Save
         </Button>
       </Group>

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { IQueryState } from "../../reducers/adminPostsQueryReducer";
+import { IQueryState } from "../../reducers/queryReducer";
 import { RootState } from "../../store";
 import { IUser } from "../../types/user.types";
 import { api } from "../../utils/axios";

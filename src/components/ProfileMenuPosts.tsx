@@ -1,10 +1,9 @@
-import { Divider, Stack, Text } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getUserPosts } from "../features/post/postThunks";
 import { RootState, useAppDispatch } from "../store";
-import { Loader } from "./Loader";
 import { PreviewPostCard } from "./PreviewPostCard";
 
 export const ProfileMenuPosts = () => {
