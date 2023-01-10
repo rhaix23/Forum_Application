@@ -1,21 +1,12 @@
-import {
-  ActionIcon,
-  Button,
-  createStyles,
-  Flex,
-  Menu,
-  Text,
-} from "@mantine/core";
-import { useReducer, useState } from "react";
+import { ActionIcon, createStyles, Flex, Menu, Text } from "@mantine/core";
+import { useReducer } from "react";
 import { IUser } from "../types/user.types";
 import { ConfirmationModal } from "./ConfirmationModal";
-import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../store";
 import { updateAccountStatus } from "../features/user/userThunks";
 import { CopyButton } from "./CopyButton";
 import {
-  IconBan,
   IconDots,
   IconEye,
   IconLock,

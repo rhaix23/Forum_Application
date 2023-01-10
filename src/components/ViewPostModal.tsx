@@ -1,6 +1,5 @@
 import { Button, Divider, Group, Modal, Text } from "@mantine/core";
 import dayjs from "dayjs";
-import { Dispatch } from "react";
 import { ActionTypes, IModalActions } from "../reducers/modalReducer";
 import { IAdminPagePost } from "../types/post.types";
 import { RichTextContent } from "./RichTextContent";

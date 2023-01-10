@@ -1,25 +1,10 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Group,
-  Modal,
-  NativeSelect,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import { Dispatch, useState } from "react";
+import { Button, Group, Modal, NativeSelect, TextInput } from "@mantine/core";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import { updateReport } from "../features/report/reportThunks";
-import { updateSubcategory } from "../features/subcategory/subcategoryThunks";
-import { updateUser } from "../features/user/userThunks";
 import { ActionTypes, IModalActions } from "../reducers/modalReducer";
 import { RootState, useAppDispatch } from "../store";
 import { IReport, ReportStatus } from "../types/reports.types";
-import { IPopulatedSubcategory } from "../types/subcategory.types";
-import { IUser } from "../types/user.types";
-import { RichTextEditor } from "./RichTextEditor";
 
 interface IProps {
   report: IReport;

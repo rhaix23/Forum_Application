@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { editPost } from "../features/post/postThunks";

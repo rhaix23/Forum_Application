@@ -1,6 +1,6 @@
-import { ActionIcon, createStyles, Flex, Menu } from "@mantine/core";
+import { ActionIcon, Flex, Menu } from "@mantine/core";
 import { IconDots, IconEye, IconPencil, IconTrash } from "@tabler/icons";
-import React, { useReducer } from "react";
+import { useReducer } from "react";
 import { deleteReport } from "../features/report/reportThunks";
 import {
   ActionTypes,

@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { createComment } from "../features/comment/commentThunks";
 import { RootState, useAppDispatch } from "../store";
 import { RichTextEditor } from "./RichTextEditor";
-import { toast } from "react-toastify";
 
 export const CreateComment = () => {
   const dispatch = useAppDispatch();

@@ -9,12 +9,7 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import {
-  IconArrowUp,
-  IconArrowDown,
-  IconMessageDots,
-  IconLock,
-} from "@tabler/icons";
+import { IconArrowUp, IconArrowDown, IconLock } from "@tabler/icons";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";

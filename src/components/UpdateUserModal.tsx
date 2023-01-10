@@ -1,21 +1,9 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Group,
-  Modal,
-  NativeSelect,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import { Dispatch, useState } from "react";
+import { Box, Button, Group, Modal, Text, TextInput } from "@mantine/core";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { updateSubcategory } from "../features/subcategory/subcategoryThunks";
 import { updateUser } from "../features/user/userThunks";
 import { ActionTypes, IModalActions } from "../reducers/modalReducer";
 import { RootState, useAppDispatch } from "../store";
-import { IPopulatedSubcategory } from "../types/subcategory.types";
 import { IUser } from "../types/user.types";
 import { RichTextEditor } from "./RichTextEditor";
 

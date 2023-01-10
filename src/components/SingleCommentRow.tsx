@@ -1,10 +1,9 @@
 import { ActionIcon, createStyles, Flex, Menu, Text } from "@mantine/core";
 import { IconDots, IconEye, IconPencil, IconTrash } from "@tabler/icons";
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { Link } from "react-router-dom";
 import { IComment } from "../types/comment.types";
 import { ConfirmationModal } from "./ConfirmationModal";
-import dayjs from "dayjs";
 import { UpdateCommentModal } from "./UpdateCommentModal";
 import { ViewCommentModal } from "./ViewCommentModal";
 import { useAppDispatch } from "../store";

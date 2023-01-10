@@ -1,5 +1,5 @@
 import { Button, Group, Modal, TextInput } from "@mantine/core";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { updateCategory } from "../features/category/categoryThunks";
 import { ActionTypes, IModalActions } from "../reducers/modalReducer";
