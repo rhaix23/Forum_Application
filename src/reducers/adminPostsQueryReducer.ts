@@ -1,3 +1,5 @@
+import { ReportStatus, ReportType } from "../types/reports.types";
+
 export interface ISort {
   text: "Newest" | "Oldest" | "Most Popular" | "Least Popular";
   value: "-createdAt" | "createdAt" | "-ratingCount" | "ratingCount";
@@ -10,7 +12,9 @@ export type SearchBy =
   | "user"
   | "post"
   | "subcategory"
-  | "username";
+  | "username"
+  | "report type"
+  | "status";
 
 export enum QueryTypes {
   SEARCH_BY = "SEARCH_BY",
@@ -20,11 +24,13 @@ export enum QueryTypes {
   LIMIT = "LIMIT",
   SORT = "SORT",
   ACTIVE_PAGE = "ACTIVE_PAGE",
+  REPORT_TYPE = "REPORT_TYPE",
+  STATUS = "STATUS",
 }
 
 interface IQueryActions {
   type: QueryTypes;
-  payload: string | Date | number | ISort;
+  payload: string | Date | number | ISort | ReportStatus | ReportType;
 }
 
 export interface IQueryState {
@@ -35,12 +41,14 @@ export interface IQueryState {
   limit: number;
   activePage: number;
   sort: ISort;
+  reportType: ReportType;
+  status: ReportStatus;
 }
 
 export const queryState: IQueryState = {
   searchBy: "",
   searchValue: "",
-  startDate: new Date(Date.now() - 7000 * 60 * 60 * 24),
+  startDate: new Date(Date.now() - 700000 * 60 * 60 * 24),
   endDate: new Date(new Date().setHours(23, 59, 59, 999)),
   limit: 10,
   activePage: 1,
@@ -48,6 +56,8 @@ export const queryState: IQueryState = {
     text: "Newest",
     value: "-createdAt",
   },
+  reportType: "",
+  status: "",
 };
 
 export const queryReducer = (state: IQueryState, action: IQueryActions) => {
@@ -86,6 +96,16 @@ export const queryReducer = (state: IQueryState, action: IQueryActions) => {
       return {
         ...state,
         sort: action.payload as ISort,
+      };
+    case QueryTypes.REPORT_TYPE:
+      return {
+        ...state,
+        reportType: action.payload as ReportType,
+      };
+    case QueryTypes.STATUS:
+      return {
+        ...state,
+        status: action.payload as ReportStatus,
       };
     default:
       return state;
