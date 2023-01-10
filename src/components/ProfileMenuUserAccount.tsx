@@ -14,9 +14,11 @@ import {
 import { IconBrandGithub, IconBrandLinkedin, IconMail } from "@tabler/icons";
 import { ChangeEvent, useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { updateUser } from "../features/user/userThunks";
 import { RootState, useAppDispatch } from "../store";
 import { CopyButton } from "./CopyButton";
+import { ReportModal } from "./ReportModal";
 import { RichTextContent } from "./RichTextContent";
 import { RichTextEditor } from "./RichTextEditor";
 
@@ -39,6 +41,7 @@ export const ProfileMenuUserAccount = () => {
     (state: RootState) => state.user
   );
   const [isEditing, setIsEditing] = useState(false);
+  const [openReportModal, setOpenReportModal] = useState(false);
 
   if (!profile) {
     return null;
@@ -92,23 +95,43 @@ export const ProfileMenuUserAccount = () => {
             textColor="gray"
           />
         )}
-        {user && user._id === profile._id && (
-          <Group position="right">
-            <Button
-              size="xs"
-              color={isEditing ? "gray" : "yellow"}
-              onClick={() => setIsEditing((state) => !state)}
-              compact
-            >
-              {isEditing ? "Cancel" : "Edit Profile"}
-            </Button>
-            {isEditing && (
-              <Button size="xs" compact onClick={handleSubmit}>
-                Save
+        <Group position="right">
+          {user && user._id === profile._id && (
+            <>
+              <Button
+                size="xs"
+                color={isEditing ? "gray" : "yellow"}
+                onClick={() => setIsEditing((state) => !state)}
+                compact
+              >
+                {isEditing ? "Cancel" : "Edit Profile"}
               </Button>
-            )}
-          </Group>
-        )}
+              {isEditing && (
+                <Button size="xs" compact onClick={handleSubmit}>
+                  Save
+                </Button>
+              )}
+            </>
+          )}
+          {user && user._id !== profile._id && (
+            <>
+              <Button
+                size="xs"
+                color="red"
+                compact
+                onClick={() => setOpenReportModal((state) => !state)}
+              >
+                Report
+              </Button>
+              <ReportModal
+                reportedObjectType="User"
+                reportedObjectId={profile._id}
+                opened={openReportModal}
+                setOpened={setOpenReportModal}
+              />
+            </>
+          )}
+        </Group>
       </Flex>
       {isEditing ? (
         <>

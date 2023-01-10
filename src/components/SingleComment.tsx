@@ -12,6 +12,7 @@ import {
 import {
   IconAlertCircle,
   IconDots,
+  IconExclamationCircle,
   IconPencil,
   IconTrash,
 } from "@tabler/icons";
@@ -29,6 +30,7 @@ import { RichTextEditor } from "./RichTextEditor";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { CopyButton } from "./CopyButton";
+import { ReportModal } from "./ReportModal";
 dayjs.extend(relativeTime);
 
 interface IProps {
@@ -44,6 +46,7 @@ export const SingleComment = ({ comment }: IProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
   const { status } = useSelector((state: RootState) => state.comment);
+  const [openReportModal, setOpenReportModal] = useState(false);
 
   const handleDelete = () => {
     if (id) {
@@ -131,6 +134,12 @@ export const SingleComment = ({ comment }: IProps) => {
               </Menu.Dropdown>
             </Menu>
           )}
+
+        {user && comment.user._id !== user._id && (
+          <ActionIcon onClick={() => setOpenReportModal((state) => !state)}>
+            <IconExclamationCircle size={18} />
+          </ActionIcon>
+        )}
       </Flex>
 
       {isEditing ? (
@@ -204,6 +213,13 @@ export const SingleComment = ({ comment }: IProps) => {
           textColor="gray"
         />
       )}
+
+      <ReportModal
+        reportedObjectType="Comment"
+        reportedObjectId={comment._id}
+        opened={openReportModal}
+        setOpened={setOpenReportModal}
+      />
     </Paper>
   );
 };

@@ -12,11 +12,16 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconArrowUp, IconArrowDown, IconAlertCircle } from "@tabler/icons";
+import {
+  IconArrowUp,
+  IconArrowDown,
+  IconAlertCircle,
+  IconExclamationCircle,
+} from "@tabler/icons";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { CopyButton, RichTextContent, RichTextEditor } from ".";
+import { CopyButton, ReportModal, RichTextContent, RichTextEditor } from ".";
 import {
   deletePostRate,
   editPost,
@@ -53,6 +58,7 @@ const PostCard = ({ post }: IProps) => {
   const [body, setBody] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [openReportModal, setOpenReportModal] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
   const { status, ratingStatus } = useSelector(
     (state: RootState) => state.post
@@ -172,7 +178,7 @@ const PostCard = ({ post }: IProps) => {
     content = (
       <Box sx={{ display: "flex", width: "100%" }} py={8}>
         <Flex justify="center" direction="column" sx={{ width: "100%" }}>
-          <Group>
+          <Flex justify="space-between" align="center">
             <Text size={12} color="gray.6">
               Posted by{" "}
               {post.isRemoved ? (
@@ -188,31 +194,51 @@ const PostCard = ({ post }: IProps) => {
               )}{" "}
               {dayjs(post.createdAt).fromNow()}
             </Text>
-          </Group>
+            {user && post.user._id !== user._id && (
+              <ActionIcon onClick={() => setOpenReportModal((state) => !state)}>
+                <IconExclamationCircle size={18} />
+              </ActionIcon>
+            )}
+          </Flex>
           <Text size={20} weight="bold" mb={8}>
             {post.title}
           </Text>
           <RichTextContent>{post.body}</RichTextContent>
-          {user && user._id === post.user._id && !isDeleting && (
-            <Group position="right" mt={16}>
-              <Button
-                color="yellow"
-                size="xs"
-                onClick={() => setIsEditing(true)}
-                compact
-              >
-                Edit
-              </Button>
-              <Button
-                color="red"
-                size="xs"
-                onClick={() => setIsDeleting(true)}
-                compact
-              >
-                Remove
-              </Button>
-            </Group>
+
+          {user && (
+            <Flex justify="space-between" align="center">
+              {user && user.role === "admin" && (
+                <CopyButton
+                  copyValue={post._id}
+                  displayValue={`ID: ${post._id}`}
+                  textColor="gray"
+                />
+              )}
+              <Group>
+                {user._id === post.user._id && !isDeleting && (
+                  <>
+                    <Button
+                      color="yellow"
+                      size="xs"
+                      onClick={() => setIsEditing(true)}
+                      compact
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      color="red"
+                      size="xs"
+                      onClick={() => setIsDeleting(true)}
+                      compact
+                    >
+                      Remove
+                    </Button>
+                  </>
+                )}
+              </Group>
+            </Flex>
           )}
+
           {isDeleting && (
             <Box mt={16}>
               <Alert
@@ -276,17 +302,15 @@ const PostCard = ({ post }: IProps) => {
       {post.isRemoved ? (
         <Text fs="italic">Post has been removed</Text>
       ) : (
-        <Box>
-          {content}
-          {user && user.role === "admin" && (
-            <CopyButton
-              copyValue={post._id}
-              displayValue={`ID: ${post._id}`}
-              textColor="gray"
-            />
-          )}
-        </Box>
+        <Box sx={{ width: "100%" }}>{content}</Box>
       )}
+
+      <ReportModal
+        reportedObjectType="Post"
+        reportedObjectId={post._id}
+        opened={openReportModal}
+        setOpened={setOpenReportModal}
+      />
     </Paper>
   );
 };
