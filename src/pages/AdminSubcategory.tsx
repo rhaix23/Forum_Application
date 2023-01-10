@@ -1,6 +1,6 @@
-import { Box, Button, Table, Text } from "@mantine/core";
+import { Box, Button, Table } from "@mantine/core";
 import { IconPlus } from "@tabler/icons";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { CreateSubcategoryModal, SingleSubcategoryRow } from "../components";
 import { getCategories } from "../features/category/categoryThunks";

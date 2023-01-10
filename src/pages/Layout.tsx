@@ -1,7 +1,7 @@
-import { Box, Container, Space } from "@mantine/core";
+import { Box, Container } from "@mantine/core";
 import { useLayoutEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { Footer, Header, ScrollToTop } from "../components";
+import { Footer, Header } from "../components";
 
 const Layout = () => {
   const location = useLocation();

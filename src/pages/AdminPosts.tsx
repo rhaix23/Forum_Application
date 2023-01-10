@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import { Pagination, SinglePostRow } from "../components";
 import { getPosts } from "../features/post/postThunks";

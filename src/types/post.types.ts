@@ -1,4 +1,3 @@
-import { SortOptions, TimeFilterOptions } from "./app.types";
 import { IRating } from "./rating.types";
 
 export interface IPostIdAndTitle {
